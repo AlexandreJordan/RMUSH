@@ -16,7 +16,8 @@ class Entity;
 //TODO retour à la ligne automatique dans les messages
 
 //---> GAMEPLAY
-//TODO couloir entre les pièces
+//TODO BUG couloir entre les pièces
+//TODO Un monstre par case
 //TODO gestion de la défense
 //TODO chargement d'une carte définit dans une fichier texte (level fixe)
 //TODO position des escaliers montant et descendant

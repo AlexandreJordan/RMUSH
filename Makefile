@@ -2,7 +2,7 @@
 
 All:
 	@echo "----------Building project:[ rmush2 - Release ]----------"
-	@$(MAKE) -f  "rmush2.mk"
+	@"$(MAKE)" -f  "rmush2.mk"
 clean:
 	@echo "----------Cleaning project:[ rmush2 - Release ]----------"
-	@$(MAKE) -f  "rmush2.mk" clean
+	@"$(MAKE)" -f  "rmush2.mk" clean

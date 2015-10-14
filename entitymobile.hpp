@@ -10,8 +10,6 @@ public:
     EntityMobile(const float& plife, const float& pMaxLife, const float& pdefense);
     ~EntityMobile();
 
-	void render();
-
 	float life;
 	float maxLife;
 	float defense;

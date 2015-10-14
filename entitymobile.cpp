@@ -18,8 +18,3 @@ EntityMobile::EntityMobile(const float& plife, const float& pMaxLife, const floa
 EntityMobile::~EntityMobile()
 {
 }
-
-void EntityMobile::render()
-{
-
-}

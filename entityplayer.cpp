@@ -14,6 +14,7 @@ EntityPlayer::EntityPlayer(const float& plife, const float& pMaxLife, const floa
 
 EntityPlayer::~EntityPlayer()
 {
+	inventory_.clearAndDelete();
 }
 
 void EntityPlayer::render()
@@ -56,7 +57,7 @@ void EntityPlayer::processKey(const int& key)
 {
 	switch(key)
 	{
-		case 'i' : std::cout << "appel inventaire" << std::endl; break;
+		case 'i' : std::cout << choseFromInventary() << std::endl; break;
 		case 'd' : std::cout << "appel drop" << std::endl; break;
 		case 'g' : std::cout << "appel get" << std::endl; break;
 		default: break;
@@ -120,4 +121,80 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
 	y = ptargetY;
 	
 	return true;
+}
+
+/**
+ * Ajoute l'item passé en paramètre dans l'inventaire du joueur
+ * Le pointeur est supprimé de la liste des items du niveaux en cours
+ * @param item Item ajouté à l'inventaire
+ * @return TRUE si l'objet est ajouté (assez de place)
+ */
+bool EntityPlayer::addToInventory(EntityItem* item)
+{
+	if (inventory_.size() > inventorySize_)
+		return false;
+		
+	inventory_.push(item);
+	Engine::getInstance()->getMap().getCurrentLevel().getItemsList().remove(item);
+	return true;		
+}
+
+/**
+ * Utilise l'item
+ * @param item
+ */
+void EntityPlayer::useItem(EntityItem* item)
+{
+	//item->use((Entity)this);
+}
+
+/**
+ * Affiche l'inventaire et retourne l'objet choisi si il existe sinon NULL
+ * @param powner Le joueur
+ */
+EntityItem* EntityPlayer::choseFromInventary()
+{
+	static TCODConsole console(INVENTORY_WIDTH, INVENTORY_HEIGHT);
+	console.setDefaultBackground(TCODColor(200, 180, 50));
+	console.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, "Utiliser");
+	console.setDefaultForeground(TCODColor::white);
+	
+	int shortcut 	= 'a';
+	int posY 		= 1;
+	
+	for (EntityItem **it = inventory_.begin(); it != inventory_.end(); it++)
+	{
+		EntityItem* item = *it;
+		
+		console.print(2, posY, "%c - %s", shortcut, item->name.c_str());
+		
+		posY++;
+		shortcut++;
+	}
+	
+	TCODConsole::blit(&console, 0, 0, 
+					  INVENTORY_WIDTH, 
+					  INVENTORY_HEIGHT, 
+					  TCODConsole::root, 
+					  (int)(WINDOW_WIDTH - INVENTORY_WIDTH) / 2, 
+					  (int)(WINDOW_HEIGHT - INVENTORY_HEIGHT) / 2);
+	TCODConsole::flush();
+	
+	//attente du choix de l'utilisateur
+	TCOD_key_t key;
+	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+	
+	//std::cout << "key : " << key.vk << std::endl;
+	
+	if (key.vk == TCODK_CHAR) {
+		int objIndex = key.c - 'a';
+		
+		//std::cout << "inv size : " << owner->container->getInventory().size() << std::endl;
+		//std::cout << "index : " << objIndex << std::endl;
+	
+		if (objIndex >= 0 && objIndex < inventory_.size())
+			return inventory_.get(objIndex);
+	}
+	
+	return NULL;
 }

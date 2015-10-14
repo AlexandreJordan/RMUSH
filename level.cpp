@@ -1,5 +1,6 @@
 #include "level.hpp"
 #include "engine.hpp"
+#include "entityItemBandage.hpp"
 #include "tools.hpp"
 
 class BspListener : public ITCODBspCallback
@@ -151,10 +152,8 @@ void Level::render()
 	//dessin des items
 	for (EntityItem **iterator = items_.begin(); iterator != items_.end(); iterator++)
 	{
-		(*iterator)->render();
-		
-		/*if (map->isInFov((*iterator)->posX, (*iterator)->posY) || isRevealMode)
-			(*iterator)->render();*/
+		if (isInFov((*iterator)->x, (*iterator)->y) || Engine::getInstance()->getRevealMode())
+			(*iterator)->render();
 	}
 }
 
@@ -309,19 +308,21 @@ void Level::addMonster(const int &px, const int &py)
  */
 void Level::addItem(const int& px, const int& py)
 {
-	//int dice			= rnd_->get(0, 100);
-	//EntityItem* item	= NULL;
+	int dice = rnd_->get(0, 100);
 	
-/*	if (dice > 70) {
-		item = new Objectpx, py, '!', "Potion de soin", "La potion de soin restaure de pv.", false, TCODColor::orange);
-		item->
-		item->usable = new HealthPotion(item, 5);
-		Engine::getInstance()->getObjects().insertBefore(item, 0);
-	} else {
-		item = new Object(px, py, 'D', "Arblète", "L'arbalete permet de défoncer du pnj.", false, TCODColor::orange);
-		item->usable = new CrossBow(item, 6, 15);
-		Engine::getInstance()->getObjects().insertBefore(item, 0);
-	}*/
+	if (dice > 50)
+	{
+		EntityItemBandage* item = new EntityItemBandage();
+		item->block 			= false;
+		item->chr				= 'm';
+		item->color				= C_ITEM_BANDAGE;
+		item->name				= "Bandage";
+		item->description		= "Bandage de soins. Arrête les saignements.";
+		item->x					= px;
+		item->y					= py;
+		item->lifeRestore		= 10;
+		items_.push(item);
+	}
 }
 
 /**
