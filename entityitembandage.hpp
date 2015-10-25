@@ -13,7 +13,8 @@ public:
 	void render();
 	void update();
 
-    void use(EntityMobile* powner, EntityMobile* ptarget);
+    void use(EntityMobile* powner);
+	void useFromGround(EntityMobile* powner);
 
 	int lifeRestore;
 };
@@ -40,9 +41,16 @@ EntityItemBandage::~EntityItemBandage()
 /**
  * Utilisation de l'item
  */
-void EntityItemBandage::use(EntityMobile* powner, EntityMobile* ptarget)
+void EntityItemBandage::use(EntityMobile* powner)
 {
-    std::cout << powner->name << " utilise " << this->name << " sur " << ptarget->name << std::endl;
+    std::cout << powner->name << " utilise " << this->name << std::endl;
+}
+
+/**
+ * Utilisation de l'item directement au sol
+ */
+void EntityItemBandage::useFromGround(EntityMobile* powner)
+{
 }
 
 void EntityItemBandage::update()

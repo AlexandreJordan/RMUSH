@@ -7,10 +7,13 @@
 class EntityItem : public Entity
 {
 public:
-	EntityItem() : Entity() {}
+	EntityItem() : Entity(), isSelected(false) {}
     virtual ~EntityItem() {}
 
-	virtual void use(EntityMobile* powner, EntityMobile* ptarget) = 0;
+	virtual void use(EntityMobile* powner) = 0;
+	//virtual void useFromGround(EntityMobile* powner) = 0;
+	
+	bool isSelected;
 };
 
 #endif

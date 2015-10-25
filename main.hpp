@@ -16,7 +16,9 @@ class Entity;
 //TODO retour à la ligne automatique dans les messages
 
 //---> GAMEPLAY
+//TODO Utilisation du fileparser pour créer des objets avec caractéristiques
 //TODO BUG couloir entre les pièces
+//TODO attaque pnj
 //TODO Un monstre par case
 //TODO gestion de la défense
 //TODO chargement d'une carte définit dans une fichier texte (level fixe)

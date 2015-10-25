@@ -1,6 +1,7 @@
 #include "level.hpp"
 #include "engine.hpp"
-#include "entityItemBandage.hpp"
+#include "entityitembandage.hpp"
+#include "stairup.hpp"
 #include "tools.hpp"
 
 class BspListener : public ITCODBspCallback
@@ -72,9 +73,12 @@ Level::Level(const int& pwidth, const int& pheight) :
  */
 Level::~Level()
 {
+	rooms_.clearAndDelete();
 	monsters_.clearAndDelete();
 	items_.clearAndDelete();
+	fixedItems_.clearAndDelete();
 	
+	delete stairUp_;
 	delete tcmap_;
 	delete [] tiles_;
 }
@@ -102,6 +106,9 @@ void Level::generateBsp()
 	bsp.splitRecursive(rnd_, 8, ROOM_MAX_SIZE, ROOM_MAX_SIZE, 1.5f, 1.5f);
     BspListener listener(*this);
     bsp.traverseInvertedLevelOrder(&listener, NULL);
+	
+	//DEV ajout des escaliers montant / descendant
+	createStairUp(rooms_.get(0)->x, rooms_.get(0)->y);
 }
 
 /**
@@ -114,11 +121,15 @@ void Level::update()
 	if (Engine::getInstance()->getMainStatus() == NEW_TURN)
 	{
 		//mise à jour des PNJ	
-		for (EntityMonster **iterator = monsters_.begin(); iterator != monsters_.end(); iterator++)
-			(*iterator)->update();
+		/*for (EntityMonster **iterator = monsters_.begin(); iterator != monsters_.end(); iterator++)
+			(*iterator)->update();*/
 		
 		//mise à jour des items
 		for (EntityItem **iterator = items_.begin(); iterator != items_.end(); iterator++)
+			(*iterator)->update();
+			
+		//mise à jour des items fixe
+		for (EntityFixedItem **iterator = fixedItems_.begin(); iterator != fixedItems_.end(); iterator++)
 			(*iterator)->update();
 	}
 }
@@ -151,6 +162,13 @@ void Level::render()
 	
 	//dessin des items
 	for (EntityItem **iterator = items_.begin(); iterator != items_.end(); iterator++)
+	{
+		if (isInFov((*iterator)->x, (*iterator)->y) || Engine::getInstance()->getRevealMode())
+			(*iterator)->render();
+	}
+	
+	//dessin des items fixes
+	for (EntityFixedItem **iterator = fixedItems_.begin(); iterator != fixedItems_.end(); iterator++)
 	{
 		if (isInFov((*iterator)->x, (*iterator)->y) || Engine::getInstance()->getRevealMode())
 			(*iterator)->render();
@@ -192,6 +210,11 @@ void Level::dig(int px1, int py1, int px2, int py2)
 void Level::createRoom(bool pfirst, int px1, int py1, int px2, int py2)
 {
 	dig(px1, py1, px2, py2);
+	
+				
+	//ajout de la pièce dans la liste
+	Room* room = new Room(px1, py1, (px2 - px1), (py2 - py1));
+	rooms_.push(room);
 
 	//DEV première pièce, placement du joueur au centre
 	if (pfirst)
@@ -216,6 +239,7 @@ void Level::createRoom(bool pfirst, int px1, int py1, int px2, int py2)
 	{
 		int x = rnd_->getInt(px1, px2);
 		int y = rnd_->getInt(py1, py2);
+		addItem(x, y);
 		addItem(x, y);
 		nbItems--;			
 	}
@@ -261,7 +285,7 @@ bool Level::isExplored(const int &px, const int &py) const
 /**
  * Retourne TRUE si la case ciblé est vide :
  * 	- Ce n'est pas un mur
- * 	- Il n'y a pas d'Object dessus ayant la propriété "block" à TRUE
+ * 	- Il n'y a pas de pnj dessus
  */
 bool Level::canWalk(const int &px, const int &py) const
 {
@@ -334,4 +358,21 @@ void Level::reveal()
 	for (int x = 0; x < width_; x++)
 		for (int y = 0; y < height_; y++)
 			tiles_[x + y * width_].explored = true;
+}
+
+/**
+ * Créer un EntityStairUp
+ */
+void Level::createStairUp(const int& px, const int& py)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	StairUp* item 			= new StairUp();
+	item->block 			= false;
+	item->chr				= '<';
+	item->color				= C_ITEM_STAIRUP;
+	item->name				= "Escalier montant";
+	item->description		= "Vous permet de monter à l'étage supérieur";
+	item->x					= px;
+	item->y					= py;
+	fixedItems_.push(item);
 }

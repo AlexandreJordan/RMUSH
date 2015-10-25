@@ -14,15 +14,22 @@ public:
 	void update();
 	void render();
 	
-	bool addToInventory(EntityItem* item);
-	void useItem(EntityItem* item);
+	void useItemFromGround(EntityItem* item);
 	
 	TCODList<EntityItem*>& getInventory() { return inventory_; }
 	
 private:
 	void processKey(const int& key);
 	bool moveOrAttack(const int& ptargetX, const int& ptargetY);
-	EntityItem* choseFromInventary();
+	
+	EntityItem* choseOneFromList(TCODList<EntityItem*> plist);
+	TCODList<EntityItem*> choseMultiFromList(TCODList<EntityItem*> plist);
+	
+	bool addToInventory(EntityItem* item);
+	bool dropToGround(EntityItem* item);
+	
+	TCODList<EntityItem*> getItemsFromTile(const int& px, const int& py);
+	
 	
 	int inventorySize_;
 	TCODList<EntityItem*> inventory_;

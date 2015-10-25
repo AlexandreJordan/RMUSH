@@ -48,7 +48,7 @@ void Engine::update()
 		//affiche toute la carte
         case TCODK_INSERT	: { map_.revealCurrentLevel(); isRevealMode_ = true; break; }
 		//vide la liste des messages
-		//case TCODK_DELETE	: gui->clear(); break;
+		case TCODK_DELETE	: gui_.clear(); break;
 		//affiche la console de développement
 		case TCODK_F2		: showDevConsole(); break;
         default: break;
@@ -107,15 +107,16 @@ void Engine::showDevConsole()
 	console.setDefaultForeground(TCODColor::white);
 	
 	//système
-	console.print(1, 1, "Systeme");
-	console.print(1, 2, "FPS : %i", TCODSystem::getFps());
+	console.print(1, 2, "-> Systeme");
+	console.print(1, 4, "FPS : %i", TCODSystem::getFps());
 	//map
-	//console.print(1, 4, "Carte");
-	//console.print(1, 5, "Taille : %i, %i", map_.width, map->height);
-	console.print(1, 7, "Joueur position : %i, %i", player_.x, player_.y);
+	console.print(1, 10, "-> Carte");
+	console.print(1, 12, "Taille : %i, %i", map_.getCurrentLevel().getWidth(), map_.getCurrentLevel().getHeight());
+	console.print(1, 13, "Joueur position : %i, %i", player_.x, player_.y);
 	//items/objets
-	//console.print(25, 1, "Monstres : %i", getMonstersCount());
-	//console.print(25, 2, "Items : %i", getItemsCount());
+	console.print(28, 2, "-> Mobile");
+	console.print(28, 4, "Monstres : %i", map_.getCurrentLevel().getMonstersList().size());
+	console.print(28, 5, "Items : %i", map_.getCurrentLevel().getItemsList().size());
 	
 	TCODConsole::blit(&console, 0, 0, 
 						DEV_CONSOLE_WIDTH, 

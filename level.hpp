@@ -5,7 +5,21 @@
 #include "constants.hpp"
 #include "entitymonster.hpp"
 #include "entityitem.hpp"
+#include "entityfixeditem.hpp"
 #include "tile.hpp"
+
+class Room
+{
+public:
+	Room(const int& px, const int& py, const int& pwidth, const int& pheight) : 
+		x(px), y(py), width(pwidth), height(pheight) {}
+	Room() : x(0), y(0), width(0), height(0) {}
+
+	int x;
+	int y;
+	int width;
+	int height;
+};
 
 class Level
 {
@@ -28,7 +42,11 @@ public:
 	
 	TCODList<EntityMonster*>& getMonstersList() { return monsters_; }
 	TCODList<EntityItem*>& getItemsList() { return items_; }
-
+	TCODList<EntityFixedItem*>& getFixedItemsList() { return fixedItems_; }
+	
+	int getWidth() { return width_; }
+	int getHeight() { return height_; }
+	
 private:
 	friend class BspListener;
 	
@@ -37,14 +55,20 @@ private:
 	bool isExplored(const int &px, const int &py) const;
 	void addMonster(const int &px, const int &py);
 	void addItem(const int& px, const int& py);
+	void createStairUp(const int& px, const int& py);
+	//void createStairDown();
 	
 	TCODRandom* rnd_;
 
 	TCODMap* tcmap_;
 	Tile* tiles_;
 	
+	TCODList<Room*> rooms_;
 	TCODList<EntityMonster*> monsters_;
 	TCODList<EntityItem*> items_;
+	TCODList<EntityFixedItem*> fixedItems_;
+	
+	EntityItem* stairUp_;
 	
 	int width_;
 	int height_;
