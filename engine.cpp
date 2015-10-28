@@ -113,6 +113,8 @@ void Engine::showDevConsole()
 	console.print(1, 10, "-> Carte");
 	console.print(1, 12, "Taille : %i, %i", map_.getCurrentLevel().getWidth(), map_.getCurrentLevel().getHeight());
 	console.print(1, 13, "Joueur position : %i, %i", player_.x, player_.y);
+	console.print(1, 14, "Level courant : %i", map_.getCurrentLevelCount());
+	
 	//items/objets
 	console.print(28, 2, "-> Mobile");
 	console.print(28, 4, "Monstres : %i", map_.getCurrentLevel().getMonstersList().size());

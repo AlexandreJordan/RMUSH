@@ -18,13 +18,17 @@ public:
 	void update();
 	void render();
 	
-	void revealCurrentLevel();					//révèle le level courant
+	void revealCurrentLevel();									//révèle le level courant
 	
-	Level& getCurrentLevel();					//accès au level courant
+	Level& getCurrentLevel();									//accès au level courant
 	
+	void changeLevelToUp();										//change pour le level supérieur
+	void changeLevelToDown();									//change pour le level inférieur
+	
+	int getCurrentLevelCount() const { return currentLevel_; }
 private:
-	int currentLevel_;							//gestion des levels
-	std::map<int, Level*> levels_;				//...
+	int currentLevel_;											//gestion des levels
+	std::map<int, Level*> levels_;								//...
 };
 
 #endif

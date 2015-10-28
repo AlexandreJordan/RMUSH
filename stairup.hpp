@@ -15,7 +15,6 @@ public:
 	void update();
 
     void use(EntityMobile* powner);
-	void useFromGround(EntityMobile* powner);
 };
 
 #endif
@@ -35,19 +34,13 @@ StairUp::~StairUp()
 {
 }
 
-
-/**
- * Utilisation de l'item
- */
-void StairUp::use(EntityMobile* powner)
-{}
-
 /**
  * Utilisation de l'item directement au sol
  */
-void StairUp::useFromGround(EntityMobile* powner)
+void StairUp::use(EntityMobile* powner)
 {
 	Engine::getInstance()->getGui().message(TCODColor::green, "Vous montez à l'étage supérieur.");
+	Engine::getInstance()->getMap().changeLevelToUp();
 }
 
 void StairUp::update()

@@ -54,12 +54,11 @@ static const int DEV_CONSOLE_HEIGHT		= 50;
 static const TCODColor C_MESS_INFO		= TCODColor::white;
 static const TCODColor C_MESS_HIT		= TCODColor::green;
 static const TCODColor C_MESS_DAMAGE	= TCODColor::red;
-static const TCODColor C_CHAR_STAIR		= TCODColor::white;
 
 //couleurs des entity
 static const TCODColor C_PLAYER			= TCODColor::white;
 static const TCODColor C_MONSTER		= TCODColor::orange;
 static const TCODColor C_ITEM_BANDAGE	= TCODColor::darkGreen;
-static const TCODColor C_ITEM_STAIRUP	= TCODColor::darkGreen;
+static const TCODColor C_ITEM_STAIR		= TCODColor::white;
 
 #endif

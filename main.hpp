@@ -22,8 +22,6 @@ class Entity;
 //TODO Un monstre par case
 //TODO gestion de la défense
 //TODO chargement d'une carte définit dans une fichier texte (level fixe)
-//TODO position des escaliers montant et descendant
-//TODO changement de niveau
 //TODO information sur les items dans l'inventaire
 //TODO combat avec arme de jets
 //TODO Piège et nuage

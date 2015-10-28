@@ -11,7 +11,6 @@ public:
     virtual ~EntityItem() {}
 
 	virtual void use(EntityMobile* powner) = 0;
-	//virtual void useFromGround(EntityMobile* powner) = 0;
 	
 	bool isSelected;
 };

@@ -2,7 +2,10 @@
 #include "engine.hpp"
 #include "entityitembandage.hpp"
 #include "stairup.hpp"
+#include "stairdown.hpp"
 #include "tools.hpp"
+#include <fstream>
+
 
 class BspListener : public ITCODBspCallback
 {
@@ -109,6 +112,26 @@ void Level::generateBsp()
 	
 	//DEV ajout des escaliers montant / descendant
 	createStairUp(rooms_.get(0)->x, rooms_.get(0)->y);
+	createStairDown(rooms_.peek()->x, rooms_.peek()->y);
+}
+
+/**
+ * Génère un niveau depuis un fichier texte
+ */
+void Level::generateFromFile(const std::string& ppath)
+{
+	std::ifstream file("../data/levels/test.rmp", std::ios::in);
+	
+	if (!file)
+		return;
+		
+	std::string line = "";
+	while (getline(file, line))
+	{
+		std::cout << "> " << line << std::endl;
+	}
+		
+	file.close();
 }
 
 /**
@@ -369,9 +392,26 @@ void Level::createStairUp(const int& px, const int& py)
 	StairUp* item 			= new StairUp();
 	item->block 			= false;
 	item->chr				= '<';
-	item->color				= C_ITEM_STAIRUP;
+	item->color				= C_ITEM_STAIR;
 	item->name				= "Escalier montant";
 	item->description		= "Vous permet de monter à l'étage supérieur";
+	item->x					= px;
+	item->y					= py;
+	fixedItems_.push(item);
+}
+
+/**
+ * Créer un EntityStairDown
+ */
+void Level::createStairDown(const int& px, const int& py)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	StairDown* item 		= new StairDown();
+	item->block 			= false;
+	item->chr				= '>';
+	item->color				= C_ITEM_STAIR;
+	item->name				= "Escalier descendant";
+	item->description		= "Vous permet de descendre à l'étage inférieur";
 	item->x					= px;
 	item->y					= py;
 	fixedItems_.push(item);

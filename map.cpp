@@ -34,6 +34,7 @@ void Map::initialize()
 	
 	//DEV création d'un level
 	createLevel(0, MAP_WIDTH, MAP_HEIGHT);
+	createLevel(1, MAP_WIDTH, MAP_HEIGHT);
 }
 
 /**
@@ -77,4 +78,38 @@ Level& Map::getCurrentLevel()
 void Map::revealCurrentLevel()
 {
 	levels_[currentLevel_]->reveal();
+}
+
+/**
+ * Change pour le level supérieur
+ */
+void Map::changeLevelToUp()
+{
+	//le level courant est le premier
+	//-> on sort
+	if (currentLevel_ <= 0)
+		return;
+	
+	currentLevel_--;
+	
+	//position du joueur dans la pièce de l'escalier opposé
+	Engine::getInstance()->getPlayer().setPosition(	levels_[currentLevel_]->getLastRoom()->x,
+													levels_[currentLevel_]->getLastRoom()->y );
+}
+
+/**
+ * Change pour le level inférieur
+ */
+void Map::changeLevelToDown()
+{
+	//le level courant est le dernier
+	//-> on sort
+	if ((unsigned)currentLevel_ >= levels_.size())
+		return;
+	
+	currentLevel_++;
+	
+	//position du joueur dans la pièce de l'escalier opposé
+	Engine::getInstance()->getPlayer().setPosition(	levels_[currentLevel_]->getFirstRoom()->x,
+													levels_[currentLevel_]->getFirstRoom()->y );
 }

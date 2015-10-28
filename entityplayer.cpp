@@ -64,7 +64,14 @@ void EntityPlayer::processKey(const int& key)
 		//utilisation d'un objet de l'inventaire
 		case 'a' : std::cout << "utilisation d'un objet de l'inventaire" << std::endl; break;
 		//utilisation d'un objet au sol
-		case 'u' : std::cout << "utilisation d'un objet fixe au sol" << std::endl; break;
+		case 'u' :
+		{
+			EntityFixedItem* itemAtGround = getFixedItemFromTile(x, y);
+			if (itemAtGround)
+				itemAtGround->use(this);
+			
+			break;
+		}
 		//monter un escalier
 		case '<' : std::cout << "stair up" << std::endl; break;
 		//descendre un escalier
@@ -107,6 +114,21 @@ void EntityPlayer::processKey(const int& key)
 				for (EntityItem **it = selectedItems.begin(); it != selectedItems.end(); it++)
 					addToInventory(*it);
 			}
+			break;
+		}
+		
+		//DEV se déplacer dans la première pièce
+		case 'w' :
+		{
+			setPosition(Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->x,
+						Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->y);
+			break;
+		}
+		//DEV se déplacer dans la première pièce
+		case 'x' :
+		{
+			setPosition(Engine::getInstance()->getMap().getCurrentLevel().getLastRoom()->x,
+						Engine::getInstance()->getMap().getCurrentLevel().getLastRoom()->y);
 			break;
 		}
 		default: break;
@@ -188,16 +210,6 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
 	return true;
 }
 
-
-/**
- * Utilise l'item
- * @param item
- */
-void EntityPlayer::useItemFromGround(EntityItem* item)
-{
-	//item->useFromGround((Entity)this);
-}
-
 /**
  * Retourne une liste de pointeurs des items d'une case px, py
  */
@@ -215,6 +227,22 @@ TCODList<EntityItem*> EntityPlayer::getItemsFromTile(const int& px, const int& p
 	}
 	
 	return result;
+}
+
+/**
+ * Retourne l'item fixe présent sur la case px, py
+ */
+EntityFixedItem* EntityPlayer::getFixedItemFromTile(const int& px, const int& py)
+{
+	Level& lvl = Engine::getInstance()->getMap().getCurrentLevel();
+	for (EntityFixedItem **it = lvl.getFixedItemsList().begin(); it != lvl.getFixedItemsList().end(); it++)
+	{
+		EntityFixedItem* item = *it;
+		if (item->x == px && item->y == py)
+			return item;
+	}
+	
+	return NULL;
 }
 
 /**

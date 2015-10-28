@@ -7,6 +7,7 @@
 #include "entityitem.hpp"
 #include "entityfixeditem.hpp"
 #include "tile.hpp"
+#include <string>
 
 class Room
 {
@@ -29,6 +30,7 @@ public:
 
 	void generate();
 	void generateBsp();
+	void generateFromFile(const std::string& ppath);
 	
 	void update();
 	void render();
@@ -47,6 +49,9 @@ public:
 	int getWidth() { return width_; }
 	int getHeight() { return height_; }
 	
+	Room* getFirstRoom() { return rooms_.get(0); }
+	Room* getLastRoom() { return rooms_.peek(); }
+	
 private:
 	friend class BspListener;
 	
@@ -56,7 +61,7 @@ private:
 	void addMonster(const int &px, const int &py);
 	void addItem(const int& px, const int& py);
 	void createStairUp(const int& px, const int& py);
-	//void createStairDown();
+	void createStairDown(const int& px, const int& py);
 	
 	TCODRandom* rnd_;
 

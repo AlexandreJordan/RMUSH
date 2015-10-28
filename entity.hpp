@@ -13,16 +13,18 @@ public:
 	virtual void update() = 0;
 	virtual void render() = 0;
 	
-	int x;										//position de l'entité
-	int y;										//...
+	void setPosition(const int& px, const int& py);		//modifie x et y
 	
-	std::string name;							//nom de l'objet
-	std::string description;					//description de l'objet
+	int x;												//position de l'entité
+	int y;												//...
 	
-	bool block;									//l'objet bloque le passage
+	std::string name;									//nom de l'objet
+	std::string description;							//description de l'objet
 	
-	int chr;									//caractère utilisé
-	TCODColor color;							//couleur de fond du caractère
+	bool block;											//l'objet bloque le passage
+	
+	int chr;											//caractère utilisé
+	TCODColor color;									//couleur de fond du caractère
 };
 
 #endif

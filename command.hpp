@@ -35,19 +35,12 @@ Command::~Command()
 {
 }
 
-
-/**
- * Utilisation de l'item
- */
-void Command::use(EntityMobile* powner)
-{}
-
 /**
  * Utilisation de l'item directement au sol
  */
-void Command::useFromGround(EntityMobile* powner)
+void Command::use(EntityMobile* powner)
 {
-	//Engine::getInstance()->getGui().message(TCODColor::green, "Vous montez à l'étage supérieur.");
+	Engine::getInstance()->getGui().message(TCODColor::green, "Vous utilisez le levier.");
 }
 
 void Command::update()
