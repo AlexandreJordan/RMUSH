@@ -62,6 +62,8 @@ private:
 	void addItem(const int& px, const int& py);
 	void createStairUp(const int& px, const int& py);
 	void createStairDown(const int& px, const int& py);
+	EntityFixedItem* createGazTrap(const int& px, const int& py);
+	void createCommand(const int& px, const int& py, EntityFixedItem* pItemtoActive);
 	
 	TCODRandom* rnd_;
 
@@ -72,8 +74,6 @@ private:
 	TCODList<EntityMonster*> monsters_;
 	TCODList<EntityItem*> items_;
 	TCODList<EntityFixedItem*> fixedItems_;
-	
-	EntityItem* stairUp_;
 	
 	int width_;
 	int height_;

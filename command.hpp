@@ -15,7 +15,8 @@ public:
 	void update();
 
     void use(EntityMobile* powner);
-	void useFromGround(EntityMobile* powner);
+
+	EntityFixedItem* ItemLink;
 };
 
 #endif
@@ -40,7 +41,11 @@ Command::~Command()
  */
 void Command::use(EntityMobile* powner)
 {
+	if (!ItemLink)
+		Engine::getInstance()->getGui().message(TCODColor::green, "Le levier n'est relié à rien...");
+	
 	Engine::getInstance()->getGui().message(TCODColor::green, "Vous utilisez le levier.");
+	ItemLink->use(powner);
 }
 
 void Command::update()

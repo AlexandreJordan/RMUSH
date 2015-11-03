@@ -32,9 +32,11 @@ void Map::initialize()
 {
 	currentLevel_ = 0;
 	
-	//DEV création d'un level
+	//DEV création des levels du jeu
 	createLevel(0, MAP_WIDTH, MAP_HEIGHT);
 	createLevel(1, MAP_WIDTH, MAP_HEIGHT);
+	createLevel(2, MAP_WIDTH, MAP_HEIGHT);
+	createLevel(3, MAP_WIDTH, MAP_HEIGHT);
 }
 
 /**

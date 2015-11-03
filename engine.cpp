@@ -18,11 +18,12 @@ void Engine::initialize()
 	mainSeed 		= TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
 	randomEngine	= new TCODRandom(mainSeed, TCOD_RNG_CMWC);
 	
-	//DEV initializePlayer
-	initializePlayer();
 	
 	//initialisation de la carte
 	map_.initialize();
+	
+	//DEV initializePlayer
+	initializePlayer();
 	
 	//DEV
 	mainStatus_ = STARTUP;
@@ -92,8 +93,8 @@ void Engine::initializePlayer()
 	player_.life		= 40.0f;
 	player_.maxLife		= 40.0f;
 	player_.defense		= 0;
-	player_.x			= 0;
-	player_.y			= 0;
+	player_.x			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->x;
+	player_.y			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->y;
 }
 
 /**

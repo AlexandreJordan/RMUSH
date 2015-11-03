@@ -3,6 +3,8 @@
 #include "entityitembandage.hpp"
 #include "stairup.hpp"
 #include "stairdown.hpp"
+#include "gaztrap.hpp"
+#include "command.hpp"
 #include "tools.hpp"
 #include <fstream>
 
@@ -81,7 +83,6 @@ Level::~Level()
 	items_.clearAndDelete();
 	fixedItems_.clearAndDelete();
 	
-	delete stairUp_;
 	delete tcmap_;
 	delete [] tiles_;
 }
@@ -113,6 +114,9 @@ void Level::generateBsp()
 	//DEV ajout des escaliers montant / descendant
 	createStairUp(rooms_.get(0)->x, rooms_.get(0)->y);
 	createStairDown(rooms_.peek()->x, rooms_.peek()->y);
+	
+	EntityFixedItem* item = createGazTrap(rooms_.get(0)->x + 1, rooms_.get(0)->y + 1);
+	createCommand(rooms_.get(0)->x + 2, rooms_.get(0)->y + 2, item);
 }
 
 /**
@@ -244,6 +248,9 @@ void Level::createRoom(bool pfirst, int px1, int py1, int px2, int py2)
 	{
 		Engine::getInstance()->getPlayer().x = px1 + (px2 - px1) / 2;
 		Engine::getInstance()->getPlayer().y = py1 + (py2 - py1) / 2;
+		
+		//DEV ajout d'item pour test
+		//createGazTrap(px1 + 1, py1);
 	}
 	
 	//DEV création des monstres - Basique pour le dev
@@ -384,7 +391,7 @@ void Level::reveal()
 }
 
 /**
- * Créer un EntityStairUp
+ * Créer un StairUp
  */
 void Level::createStairUp(const int& px, const int& py)
 {
@@ -401,7 +408,7 @@ void Level::createStairUp(const int& px, const int& py)
 }
 
 /**
- * Créer un EntityStairDown
+ * Créer un StairDown
  */
 void Level::createStairDown(const int& px, const int& py)
 {
@@ -414,5 +421,42 @@ void Level::createStairDown(const int& px, const int& py)
 	item->description		= "Vous permet de descendre à l'étage inférieur";
 	item->x					= px;
 	item->y					= py;
+	fixedItems_.push(item);
+}
+
+/**
+ * Créer un GazTrap
+ */
+EntityFixedItem* Level::createGazTrap(const int& px, const int& py)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	GazTrap* item 			= new GazTrap();
+	item->block 			= false;
+	item->chr				= '*';
+	item->color				= C_ITEM_GAZTRAP;
+	item->name				= "Gaztrap";
+	item->description		= "gaztrap";
+	item->x					= px;
+	item->y					= py;
+	fixedItems_.push(item);
+	
+	return item;
+}
+
+/**
+ * Créer un Command
+ */
+void Level::createCommand(const int& px, const int& py, EntityFixedItem* pItemtoActive)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	Command* item 			= new Command();
+	item->block 			= false;
+	item->chr				= '/';
+	item->color				= C_ITEM_GAZTRAP;
+	item->name				= "Un levier";
+	item->description		= "Active moi...";
+	item->x					= px;
+	item->y					= py;
+	item->ItemLink			= pItemtoActive;
 	fixedItems_.push(item);
 }
