@@ -7,8 +7,8 @@ EntityMonster::EntityMonster() :
 {
 }
 
-EntityMonster::EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView) :
-	EntityMobile(plife, pMaxLife, pdefense, prangeView)
+EntityMonster::EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense, const float& pfov) :
+	EntityMobile(plife, pMaxLife, pdefense, pfov)
 {
 }
 
@@ -21,6 +21,8 @@ EntityMonster::~EntityMonster()
  */
 void EntityMonster::render()
 {
+	EntityMobile::render();
+	
 	TCODConsole::root->setChar(x, y, chr);
 	TCODConsole::root->setCharForeground(x, y, color);
 }

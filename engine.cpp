@@ -37,7 +37,7 @@ void Engine::update()
 {
 	//départ du jeu, on génère le FOV du joueur
 	if (mainStatus_ == STARTUP)
-		map_.getCurrentLevel().computeFov();
+		map_.getCurrentLevel().computeFov(player_.fov);
 	
 	mainStatus_ = IDLE;
 
@@ -94,7 +94,7 @@ void Engine::initializePlayer()
 	player_.life		= 40.0f;
 	player_.maxLife		= 40.0f;
 	player_.defense		= 0;
-	player_.rangeView	= 5;
+	player_.fov			= 5;
 	player_.x			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->x;
 	player_.y			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->y;
 }
@@ -133,6 +133,12 @@ void Engine::showDevConsole()
 	
 	TCOD_key_t key;
 	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+	
+	switch(key.vk)
+	{
+		case TCODK_CHAR : return;
+		case TCODK_F1	: map_.getCurrentLevel().showPnjsFov();
+	}
 	
 	if (key.vk == TCODK_CHAR)
 		return;

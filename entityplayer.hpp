@@ -10,7 +10,7 @@ class EntityPlayer : public EntityMobile
 {
 public:
 	EntityPlayer();
-    EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView);
+    EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense, const float& pfov);
     ~EntityPlayer();
 
 	void update();

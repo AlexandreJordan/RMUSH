@@ -13,8 +13,8 @@ EntityPlayer::EntityPlayer() :
 	inventorySize_ = 26;
 }
 
-EntityPlayer::EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView) :
-	EntityMobile(plife, pMaxLife, pdefense, prangeView)
+EntityPlayer::EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense, const float& pfov) :
+	EntityMobile(plife, pMaxLife, pdefense, pfov)
 {
 }
 
@@ -51,7 +51,7 @@ void EntityPlayer::update()
 	{
 		Engine::getInstance()->setMainStatus(NEW_TURN);
 		if (moveOrAttack(x + nx, y + ny))
-			Engine::getInstance()->getMap().getCurrentLevel().computeFov();
+			Engine::getInstance()->getMap().getCurrentLevel().computeFov(Engine::getInstance()->getPlayer().fov);
 	}
 }
 

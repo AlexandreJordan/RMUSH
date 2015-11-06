@@ -16,9 +16,9 @@ class Entity;
 //TODO retour à la ligne automatique dans les messages
 //TODO Utilisation du fileparser pour créer des objets avec caractéristiques
 //TODO Commentaires de classe
+//TODO renommer monsters_ en pnjs_
 
 //---> OUTIL DEV
-//TODO afficher le FOV des pnj
 
 //---> ENGINE
 //TODO sauvegarde / chargement / menu de jeu
@@ -31,8 +31,6 @@ class Entity;
 //TODO Piège et nuage
 //TODO gestion de la furtivité
 //TODO Torche
-///////////////////////////////////TODO sélection d'une cible
-///////////////////////////////////TODO identifier les éléments d'une case
 //TODO Explosion avec destruction des murs
 //TODO attaque pnj
 //TODO gestion de la défense
@@ -43,5 +41,4 @@ class Entity;
 
 
 //---> MAP
-//TODO BUG couloir entre les pièces
 //TODO chargement d'une carte définit dans une fichier texte (level fixe)

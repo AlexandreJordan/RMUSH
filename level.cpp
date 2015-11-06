@@ -22,8 +22,6 @@ public:
 	
 	bool visitNode(TCODBsp* node, void* userData)
 	{
-		//std::cout << "roomCount : " << roomCount << std::endl;
-		
 		if (node->isLeaf())
 		{
 			int width, height, posX, posY;
@@ -34,20 +32,14 @@ public:
 			posX	= level_.rnd_->getInt(node->x + 1, node->x + node->w - width - 1);
 			posY	= level_.rnd_->getInt(node->y + 1, node->y + node->h - height - 1);
 			
-			/*std::cout << "Création de la piece" << std::endl;
-			std::cout << "width : " << width << std::endl;
-			std::cout << "height : " << height << std::endl;
-			std::cout << "posX : " << posX << std::endl;
-			std::cout << "posY : " << posY << std::endl;*/
-			
 			//création de la pièce
 			level_.createRoom((roomCount == 0), posX, posY, posX + width - 1, posY + height - 1);
 			
 			//création d'un couloir vers la dernière si ce n'est pas la première pièce
-			if (roomCount != 0) {
+			/*if (roomCount != 0) {
 				level_.dig(lastRoomCenterX, lastRoomCenterY, posX + (width / 2), lastRoomCenterY);
 				level_.dig(lastRoomCenterX, lastRoomCenterY, lastRoomCenterX, posY + (height / 2));
-			}
+			}*/
 			
 			//on garde le centre de la pièce
 			lastRoomCenterX = posX + (width / 2);
@@ -120,6 +112,44 @@ void Level::generateBsp()
 }
 
 /**
+ * Génération des couloirs entre les pièces
+ * 	Parcours des chambres
+ */
+void Level::generateBspCorridor()
+{
+	Room* currentRoom	= NULL;
+	Room* lastRoom		= NULL;
+	int lastX 			= 0;
+	int lastY 			= 0;
+	int currentX 		= 0;
+	int currentY 		= 0;
+	int i 				= 0;
+	
+	while (i < rooms_.size())
+	{
+		currentRoom = rooms_.get(i);
+		
+		//centre de la currentRoom
+		currentX = currentRoom->x + (currentRoom->width / 2);
+		currentY = currentRoom->y + (currentRoom->height / 2);
+		
+		if (i > 0)
+		{
+			//centre de la lastRoom
+			lastX = lastRoom->x + (lastRoom->width / 2);
+			lastY = lastRoom->y + (lastRoom->height / 2);
+			
+			dig(lastX, lastY, currentX + (currentRoom->width / 2), lastY);
+			dig(currentX + (currentRoom->width / 2), lastY, currentX + (currentRoom->width / 2), currentY + (currentRoom->height / 2));
+		}
+		
+		lastRoom = currentRoom;	
+		
+		i++;
+	}
+}
+
+/**
  * Génère un niveau depuis un fichier texte
  */
 void Level::generateFromFile(const std::string& ppath)
@@ -143,7 +173,7 @@ void Level::generateFromFile(const std::string& ppath)
  */
 void Level::update()
 {
-	computeFov();
+	computeFov(Engine::getInstance()->getPlayer().fov);
 	
 	if (Engine::getInstance()->getMainStatus() == NEW_TURN)
 	{
@@ -237,22 +267,11 @@ void Level::dig(int px1, int py1, int px2, int py2)
 void Level::createRoom(bool pfirst, int px1, int py1, int px2, int py2)
 {
 	dig(px1, py1, px2, py2);
-	
-				
+					
 	//ajout de la pièce dans la liste
 	Room* room = new Room(px1, py1, (px2 - px1), (py2 - py1));
 	rooms_.push(room);
 
-	//DEV première pièce, placement du joueur au centre
-	if (pfirst)
-	{
-		Engine::getInstance()->getPlayer().x = px1 + (px2 - px1) / 2;
-		Engine::getInstance()->getPlayer().y = py1 + (py2 - py1) / 2;
-		
-		//DEV ajout d'item pour test
-		//createGazTrap(px1 + 1, py1);
-	}
-	
 	//DEV création des monstres - Basique pour le dev
 	int nbMonsters = rnd_->getInt(0, MAX_ROOM_MONSTERS);
 	while(nbMonsters > 0) 
@@ -278,7 +297,7 @@ void Level::createRoom(bool pfirst, int px1, int py1, int px2, int py2)
 /**
  * Calcul du FOV suivant la position du joueur et le rayon de vision du joueur
  */
-void Level::computeFov()
+void Level::computeFov(const float& pfovRadius)
 {
 	tcmap_->computeFov(Engine::getInstance()->getPlayer().x, Engine::getInstance()->getPlayer().y, 10.0f, true, FOV_RESTRICTIVE);
 }
@@ -350,6 +369,7 @@ void Level::addMonster(const int &px, const int &py)
 	monster->name			= "orc";
 	monster->life			= 20;
 	monster->defense		= 0;
+	monster->fov			= 2.0f;
 	monster->x				= px;
 	monster->y				= py;
 	monsters_.push(monster);
@@ -476,4 +496,13 @@ void Level::createMine(const int& px, const int& py)
 	item->x					= px;
 	item->y					= py;
 	items_.push(item);
+}
+
+/**
+ * Affiche le fov de tous les PNJs
+ */
+void Level::showPnjsFov()
+{
+	for (EntityMonster **it = monsters_.begin(); it != monsters_.end(); it++)
+		(*it)->showFov = true;
 }

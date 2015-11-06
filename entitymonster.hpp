@@ -7,7 +7,7 @@ class EntityMonster : public EntityMobile
 {
 public:
 	EntityMonster();
-    EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView);
+    EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense, const float& pfov);
     virtual ~EntityMonster();
 
 	void update();

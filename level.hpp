@@ -30,17 +30,19 @@ public:
 
 	void generate();
 	void generateBsp();
+	void generateBspCorridor();
 	void generateFromFile(const std::string& ppath);
 	
 	void update();
 	void render();
 
-	void computeFov();
+	void computeFov(const float& fovRadius);
 	bool isWall(const int &px, const int &py) const;
 	bool isInFov(const int &px, const int &py) const;
 	bool canWalk(const int &px, const int &py) const;
 	
 	void reveal();
+	void showPnjsFov();
 	
 	TCODList<EntityMonster*>& getMonstersList() { return monsters_; }
 	TCODList<EntityItem*>& getItemsList() { return items_; }
