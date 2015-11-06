@@ -1,10 +1,9 @@
 #include "level.hpp"
 #include "engine.hpp"
-#include "entityitembandage.hpp"
-#include "stairup.hpp"
-#include "stairdown.hpp"
+#include "bandage.hpp"
 #include "gaztrap.hpp"
 #include "command.hpp"
+#include "stairs.hpp"
 #include "tools.hpp"
 #include <fstream>
 

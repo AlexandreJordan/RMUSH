@@ -1,5 +1,7 @@
 #include "entityplayer.hpp"
 #include "engine.hpp"
+#include "tools.hpp"
+#include "stairs.hpp"
 #include <iostream>
 #include <string>
 
@@ -11,8 +13,8 @@ EntityPlayer::EntityPlayer() :
 	inventorySize_ = 26;
 }
 
-EntityPlayer::EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense) :
-	EntityMobile(plife, pMaxLife, pdefense)
+EntityPlayer::EntityPlayer(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView) :
+	EntityMobile(plife, pMaxLife, pdefense, prangeView)
 {
 }
 
@@ -62,22 +64,39 @@ void EntityPlayer::processKey(const int& key)
 	switch(key)
 	{
 		//utilisation d'un objet de l'inventaire
-		case 'a' : std::cout << "utilisation d'un objet de l'inventaire" << std::endl; break;
+		case 'a' :
+		{
+			EntityItem* item = choseOneFromList(inventory_, "Utiliser");
+			if (item) item->use(this);
+			break;
+		}
+		
 		//utilisation d'un objet au sol
 		case 'u' :
 		{
 			EntityFixedItem* itemAtGround = getFixedItemFromTile(x, y);
-			if (itemAtGround)
-				itemAtGround->use(this);
+			if (itemAtGround) itemAtGround->use(this);
 			
 			break;
 		}
 		//monter un escalier
-		case '<' : std::cout << "stair up" << std::endl; break;
+		case '<' :
+		{
+			EntityFixedItem* itemAtGround = getFixedItemFromTile(x, y);
+			StairUp* stair = dynamic_cast<StairUp*>(itemAtGround);
+			if (stair) stair->use(this);
+			break;
+		}
 		//descendre un escalier
-		case '>' : std::cout << "stair down" << std::endl; break;
+		case '>' :
+		{
+			EntityFixedItem* itemAtGround = getFixedItemFromTile(x, y);
+			StairDown* stair = dynamic_cast<StairDown*>(itemAtGround);
+			if (stair) stair->use(this);
+			break;
+		}
 		//afficher l'inventaire
-		case 'i' : std::cout << choseOneFromList(inventory_) << std::endl; break;
+		case 'i' : std::cout << choseOneFromList(inventory_, "Inventaire") << std::endl; break;
 		//lacher un objet
 		case 'd' : 
 		{
@@ -116,16 +135,28 @@ void EntityPlayer::processKey(const int& key)
 			}
 			break;
 		}
+		//afficher les infos/items d'une case dans le FOV du joueur
+		case 'x' :
+		{
+			int x = 0;
+			int y = 0;
+			selectTile(x, y, 10.0f);
+			
+			TCODList<EntityItem*> items = getItemsFromTile(x, y);
+			choseOneFromList(items, "Informations");
+			
+			break;
+		}
 		
 		//DEV se déplacer dans la première pièce
-		case 'w' :
+		case 'b' :
 		{
 			setPosition(Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->x,
 						Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->y);
 			break;
 		}
 		//DEV se déplacer dans la première pièce
-		case 'x' :
+		case 'n' :
 		{
 			setPosition(Engine::getInstance()->getMap().getCurrentLevel().getLastRoom()->x,
 						Engine::getInstance()->getMap().getCurrentLevel().getLastRoom()->y);
@@ -249,11 +280,11 @@ EntityFixedItem* EntityPlayer::getFixedItemFromTile(const int& px, const int& py
  * Affiche l'inventaire et retourne l'objet choisi si il existe sinon NULL
  * @param powner Le joueur
  */
-EntityItem* EntityPlayer::choseOneFromList(TCODList<EntityItem*> plist)
+EntityItem* EntityPlayer::choseOneFromList(TCODList<EntityItem*> plist, const string& title)
 {
 	static TCODConsole console(INVENTORY_WIDTH, INVENTORY_HEIGHT);
 	console.setDefaultBackground(TCODColor(200, 180, 50));
-	console.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, "Utiliser");
+	console.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, title.c_str());
 	console.setDefaultForeground(TCODColor::white);
 	
 	int shortcut 	= 'a';
@@ -410,4 +441,74 @@ bool EntityPlayer::dropToGround(EntityItem* item)
 	inventory_.remove(item);
 	
 	return true;
+}
+
+/**
+ * Sélection d'une case par le joueur
+ */
+void EntityPlayer::selectTile(int& px, int& py, const float& prange)
+{
+	TCOD_key_t key;
+	int lastX 		= x;
+	int lastY 		= y;
+	bool isClosed 	= false;
+	
+	Level& currentLevel = Engine::getInstance()->getMap().getCurrentLevel();
+	
+	//
+	//boucle d'affichage
+	//
+	while (!isClosed)
+	{
+		Engine::getInstance()->render();
+		
+		//mettre en avant les case qui SONT dans le FOV et dans le RANGE (portée donnée)
+		for (int mx = 0; mx < currentLevel.getWidth(); mx++)
+			for (int my = 0; my < currentLevel.getHeight(); my++)
+			{
+				if (currentLevel.isInFov(mx, my) && !currentLevel.isWall(mx, my) && (prange >= 0 || Tools::getDistance(x, y, mx, my) <= prange))
+				{
+					TCODColor col = TCODConsole::root->getCharBackground(mx, my);
+					col = col * 1.1f;
+					TCODConsole::root->setCharBackground(mx, my, col);
+				}
+			}
+		
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+		
+		switch (key.vk)
+		{
+			case TCODK_LEFT : {
+				lastX -= 1;
+				break;
+			}
+			case TCODK_RIGHT : {
+				lastX += 1;
+				break;
+			}
+			case TCODK_UP : {
+				lastY -= 1;
+				break;
+			}
+			case TCODK_DOWN : {
+				lastY += 1;
+				break;
+			}
+			case TCODK_ENTER : {
+				px = lastX;
+				py = lastY;
+			}
+				
+			case TCODK_ESCAPE :
+				isClosed = true;
+				
+			default :
+				isClosed = true;
+		}
+
+		//position du curseur
+		TCODConsole::root->setCharBackground(lastX, lastY, TCODColor::white);
+		
+		TCODConsole::flush();
+	}
 }

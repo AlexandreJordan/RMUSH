@@ -7,8 +7,8 @@ EntityMonster::EntityMonster() :
 {
 }
 
-EntityMonster::EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense) :
-	EntityMobile(plife, pMaxLife, pdefense)
+EntityMonster::EntityMonster(const float& plife, const float& pMaxLife, const float& pdefense, const float& prangeView) :
+	EntityMobile(plife, pMaxLife, pdefense, prangeView)
 {
 }
 

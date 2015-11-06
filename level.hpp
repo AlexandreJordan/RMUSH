@@ -46,8 +46,8 @@ public:
 	TCODList<EntityItem*>& getItemsList() { return items_; }
 	TCODList<EntityFixedItem*>& getFixedItemsList() { return fixedItems_; }
 	
-	int getWidth() { return width_; }
-	int getHeight() { return height_; }
+	int getWidth() const { return width_; }
+	int getHeight() const { return height_; }
 	
 	Room* getFirstRoom() { return rooms_.get(0); }
 	Room* getLastRoom() { return rooms_.peek(); }
@@ -57,9 +57,12 @@ private:
 	
 	void dig(int px1, int py1, int px2, int py2);
 	void createRoom(bool pfirst, int px1, int py1, int px2, int py2);
+	
 	bool isExplored(const int &px, const int &py) const;
+	
 	void addMonster(const int &px, const int &py);
 	void addItem(const int& px, const int& py);
+	
 	void createStairUp(const int& px, const int& py);
 	void createStairDown(const int& px, const int& py);
 	EntityFixedItem* createGazTrap(const int& px, const int& py);

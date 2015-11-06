@@ -10,6 +10,7 @@ void Engine::initialize()
 {
 	//création de la console principale
 	//définition de la limite des FPS
+	TCODConsole::setCustomFont("../data/fonts.png", TCOD_FONT_LAYOUT_ASCII_INCOL | TCOD_FONT_TYPE_GREYSCALE);
 	TCODConsole::initRoot(WINDOW_WIDTH, WINDOW_HEIGHT, "RMush - AJ", false);
 	TCODSystem::setFps(60);
 	
@@ -93,6 +94,7 @@ void Engine::initializePlayer()
 	player_.life		= 40.0f;
 	player_.maxLife		= 40.0f;
 	player_.defense		= 0;
+	player_.rangeView	= 5;
 	player_.x			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->x;
 	player_.y			= Engine::getInstance()->getMap().getCurrentLevel().getFirstRoom()->y;
 }

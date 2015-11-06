@@ -7,15 +7,17 @@ class EntityMobile : public Entity
 {
 public:
 	EntityMobile();
-    EntityMobile(const float& plife, const float& pMaxLife, const float& pdefense);
+    EntityMobile(const float& plife, const float& pmaxLife, const float& pdefense, const float& prangeView);
     ~EntityMobile();
 
-	float life;
-	float maxLife;
-	float defense;
+	float life;					//niveau de vie actuel
+	float maxLife;				//vie maximale
+	float defense;				//point de défense
 	
-	bool isDead;
-	int moveSpeed;
+	bool isDead;				//l'entité est morte	
+	int moveSpeed;				//vitesse de déplacement
+	
+	float rangeView;			//portée de la vue de l'entité
 };
 
 #endif
