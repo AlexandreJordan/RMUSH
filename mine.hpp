@@ -1,14 +1,14 @@
-#ifndef BANDAGE_HPP
-#define BANDAGE_HPP
+#ifndef MINE_HPP
+#define MINE_HPP
 
 #include "entityitem.hpp"
 #include "entitymobile.hpp"
 
-class EntityItemBandage : public EntityItem
+class Mine : public EntityItem
 {
 public:
-    EntityItemBandage();
-    ~EntityItemBandage();
+    Mine();
+    ~Mine();
 
 	void render();
 	void update();
@@ -16,7 +16,7 @@ public:
     void use(EntityMobile* powner);
 	void useFromGround(EntityMobile* powner);
 
-	int lifeRestore;
+	int rangeDestruction;
 };
 
 #endif
@@ -24,16 +24,16 @@ public:
 /**
  * Constructeur
  */
-EntityItemBandage::EntityItemBandage() :
+Mine::Mine() :
 	EntityItem()
 {
-	lifeRestore = 0;
+	rangeDestruction = 0;
 }
 
 /**
  * Destructeur
  */
-EntityItemBandage::~EntityItemBandage()
+Mine::~Mine()
 {
 }
 
@@ -41,16 +41,16 @@ EntityItemBandage::~EntityItemBandage()
 /**
  * Utilisation de l'item
  */
-void EntityItemBandage::use(EntityMobile* powner)
+void Mine::use(EntityMobile* powner)
 {
     std::cout << powner->name << " utilise " << this->name << std::endl;
 }
 
-void EntityItemBandage::update()
+void Mine::update()
 {
 }
 
-void EntityItemBandage::render()
+void Mine::render()
 {
 	TCODConsole::root->setChar(x, y, chr);
 	TCODConsole::root->setCharForeground(x, y, color);

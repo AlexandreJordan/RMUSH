@@ -33,6 +33,7 @@ class Entity;
 //TODO Torche
 ///////////////////////////////////TODO sélection d'une cible
 ///////////////////////////////////TODO identifier les éléments d'une case
+//TODO Explosion avec destruction des murs
 //TODO attaque pnj
 //TODO gestion de la défense
 

@@ -67,6 +67,7 @@ private:
 	void createStairDown(const int& px, const int& py);
 	EntityFixedItem* createGazTrap(const int& px, const int& py);
 	void createCommand(const int& px, const int& py, EntityFixedItem* pItemtoActive);
+	void createMine(const int& px, const int& py);
 	
 	TCODRandom* rnd_;
 

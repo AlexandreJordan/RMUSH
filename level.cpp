@@ -4,6 +4,7 @@
 #include "gaztrap.hpp"
 #include "command.hpp"
 #include "stairs.hpp"
+#include "mine.hpp"
 #include "tools.hpp"
 #include <fstream>
 
@@ -458,4 +459,21 @@ void Level::createCommand(const int& px, const int& py, EntityFixedItem* pItemto
 	item->y					= py;
 	item->ItemLink			= pItemtoActive;
 	fixedItems_.push(item);
+}
+
+/**
+ * Créer une mine
+ */
+void Level::createMine(const int& px, const int& py)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	Mine* item 				= new Mine();
+	item->block 			= false;
+	item->chr				= 'x';
+	item->color				= C_ITEM_GAZTRAP;
+	item->name				= "Une mine";
+	item->description		= "Explosition !!!";
+	item->x					= px;
+	item->y					= py;
+	items_.push(item);
 }

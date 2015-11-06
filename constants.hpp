@@ -61,5 +61,6 @@ static const TCODColor C_MONSTER		= TCODColor::orange;
 static const TCODColor C_ITEM_BANDAGE	= TCODColor::darkGreen;
 static const TCODColor C_ITEM_STAIR		= TCODColor::white;
 static const TCODColor C_ITEM_GAZTRAP	= TCODColor::white;
+static const TCODColor C_ITEM_MINE		= TCODColor::red;
 
 #endif
