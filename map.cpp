@@ -48,6 +48,7 @@ void Map::createLevel(const int& plevel, const int& pwidth, const int& pheight)
 	lvl->generate();
 	lvl->generateBsp();
 	lvl->generateBspCorridor();
+	lvl->generateStairs();
 	levels_[plevel] = lvl;
 }
  

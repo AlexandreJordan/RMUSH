@@ -2,9 +2,10 @@
 #include "engine.hpp"
 #include "bandage.hpp"
 #include "gaztrap.hpp"
-#include "command.hpp"
+#include "lever.hpp"
 #include "stairs.hpp"
 #include "mine.hpp"
+#include "remotecontrol.hpp"
 #include "tools.hpp"
 #include <fstream>
 
@@ -62,6 +63,8 @@ Level::Level(const int& pwidth, const int& pheight) :
 {
 	//pointeur vers le moteur random pour simplifié l'accès
 	rnd_ = Engine::getInstance()->randomEngine;
+	
+	showPnjsFov_ = false;
 }
 
 /**
@@ -71,7 +74,7 @@ Level::Level(const int& pwidth, const int& pheight) :
 Level::~Level()
 {
 	rooms_.clearAndDelete();
-	monsters_.clearAndDelete();
+	pnjs_.clearAndDelete();
 	items_.clearAndDelete();
 	fixedItems_.clearAndDelete();
 	
@@ -103,12 +106,8 @@ void Level::generateBsp()
     BspListener listener(*this);
     bsp.traverseInvertedLevelOrder(&listener, NULL);
 	
-	//DEV ajout des escaliers montant / descendant
-	createStairUp(rooms_.get(0)->x, rooms_.get(0)->y);
-	createStairDown(rooms_.peek()->x, rooms_.peek()->y);
-	
-	EntityFixedItem* item = createGazTrap(rooms_.get(0)->x + 1, rooms_.get(0)->y + 1);
-	createCommand(rooms_.get(0)->x + 2, rooms_.get(0)->y + 2, item);
+	EntityItem* item = createMine(rooms_.get(0)->x + 1, rooms_.get(0)->y + 1);
+	createRemoteControl(rooms_.get(0)->x + 2, rooms_.get(0)->y + 2, item);
 }
 
 /**
@@ -169,6 +168,16 @@ void Level::generateFromFile(const std::string& ppath)
 }
 
 /**
+ * Génère les escaliers pour le niveau
+ */
+void Level::generateStairs()
+{
+	//TODO : ne pas créer si dernier ou premier niveau
+	createStairUp(rooms_.get(0)->x, rooms_.get(0)->y);
+	createStairDown(rooms_.peek()->x, rooms_.peek()->y);
+}
+
+/**
  * Mise à jour du level
  */
 void Level::update()
@@ -211,7 +220,7 @@ void Level::render()
 	}
 	
 	//dessins des PNJ	
-	for (EntityMonster **iterator = monsters_.begin(); iterator != monsters_.end(); iterator++)
+	for (EntityMonster **iterator = pnjs_.begin(); iterator != pnjs_.end(); iterator++)
 	{
 		if (isInFov((*iterator)->x, (*iterator)->y) || Engine::getInstance()->getRevealMode())
 			(*iterator)->render();
@@ -372,7 +381,7 @@ void Level::addMonster(const int &px, const int &py)
 	monster->fov			= 2.0f;
 	monster->x				= px;
 	monster->y				= py;
-	monsters_.push(monster);
+	pnjs_.push(monster);
 }
 
 /**
@@ -466,13 +475,13 @@ EntityFixedItem* Level::createGazTrap(const int& px, const int& py)
 /**
  * Créer un Command
  */
-void Level::createCommand(const int& px, const int& py, EntityFixedItem* pItemtoActive)
+void Level::createLever(const int& px, const int& py, EntityFixedItem* pItemtoActive)
 {
 	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
-	Command* item 			= new Command();
+	Lever* item 			= new Lever();
 	item->block 			= false;
 	item->chr				= '/';
-	item->color				= C_ITEM_GAZTRAP;
+	item->color				= C_ITEM_LEVER;
 	item->name				= "Un levier";
 	item->description		= "Active moi...";
 	item->x					= px;
@@ -484,25 +493,44 @@ void Level::createCommand(const int& px, const int& py, EntityFixedItem* pItemto
 /**
  * Créer une mine
  */
-void Level::createMine(const int& px, const int& py)
+EntityItem* Level::createMine(const int& px, const int& py)
 {
 	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
 	Mine* item 				= new Mine();
 	item->block 			= false;
 	item->chr				= 'x';
-	item->color				= C_ITEM_GAZTRAP;
+	item->color				= C_ITEM_MINE;
 	item->name				= "Une mine";
 	item->description		= "Explosition !!!";
 	item->x					= px;
 	item->y					= py;
 	items_.push(item);
+	
+	return item;
 }
 
+void Level::createRemoteControl(const int& px, const int& py, EntityItem* pItemtoActive)
+{
+	//TODO utilisation d'un fichier de config pour les caractéristiques de l'objet
+	RemoteControl* item 	= new RemoteControl();
+	item->block 			= false;
+	item->chr				= '/';
+	item->color				= C_ITEM_REMOTECONTROL;
+	item->name				= "Une télécommande";
+	item->description		= "Appuie sur le bouton !";
+	item->x					= px;
+	item->y					= py;
+	item->ItemLink			= pItemtoActive;
+	items_.push(item);
+}
 /**
  * Affiche le fov de tous les PNJs
  */
-void Level::showPnjsFov()
+void Level::switchShowPnjsFov()
 {
-	for (EntityMonster **it = monsters_.begin(); it != monsters_.end(); it++)
-		(*it)->showFov = true;
+	showPnjsFov_ = !showPnjsFov_;
+	
+	for (EntityMonster **it = pnjs_.begin(); it != pnjs_.end(); it++)
+		(*it)->showFov = showPnjsFov_;
 }
+

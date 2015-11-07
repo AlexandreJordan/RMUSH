@@ -184,7 +184,7 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
 	//
 	//il y a un PNJ dans la case ciblé
 	//
-	for (EntityMonster **it = lvl.getMonstersList().begin(); it != lvl.getMonstersList().end(); it++)
+	for (EntityMonster **it = lvl.getPnjsList().begin(); it != lvl.getPnjsList().end(); it++)
 	{
 		EntityMonster* pnj = *it;
 		
@@ -435,12 +435,11 @@ bool EntityPlayer::addToInventory(EntityItem* item)
  * @param item Item à déposer au sol
  * @return TRUE si l'objet est déposé au sol
  */
-bool EntityPlayer::dropToGround(EntityItem* item)
+void EntityPlayer::dropToGround(EntityItem* item)
 {
-	Engine::getInstance()->getMap().getCurrentLevel().getItemsList().push(item);
-	inventory_.remove(item);
-	
-	return true;
+	item->setPosition(x, y);														//mise à jour de la position de l'item
+	Engine::getInstance()->getMap().getCurrentLevel().getItemsList().push(item);	//ajoute l'item dans la liste du level
+	inventory_.remove(item);														//retire l'item de l'inventaire
 }
 
 /**

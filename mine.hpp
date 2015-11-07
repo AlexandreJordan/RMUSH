@@ -16,7 +16,8 @@ public:
     void use(EntityMobile* powner);
 	void useFromGround(EntityMobile* powner);
 
-	int rangeDestruction;
+	float rangeDestruction;
+	bool startExplosion;
 };
 
 #endif
@@ -27,7 +28,8 @@ public:
 Mine::Mine() :
 	EntityItem()
 {
-	rangeDestruction = 0;
+	rangeDestruction 	= 0.0f;
+	startExplosion		= false;
 }
 
 /**
@@ -43,11 +45,13 @@ Mine::~Mine()
  */
 void Mine::use(EntityMobile* powner)
 {
-    std::cout << powner->name << " utilise " << this->name << std::endl;
+    Engine::getInstance()->getGui().message(C_MESS_INFO, "La mine explose !!!");
+	startExplosion = true;
 }
 
 void Mine::update()
 {
+	
 }
 
 void Mine::render()

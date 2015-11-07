@@ -31,6 +31,7 @@ public:
 	void generate();
 	void generateBsp();
 	void generateBspCorridor();
+	void generateStairs();
 	void generateFromFile(const std::string& ppath);
 	
 	void update();
@@ -42,9 +43,9 @@ public:
 	bool canWalk(const int &px, const int &py) const;
 	
 	void reveal();
-	void showPnjsFov();
+	void switchShowPnjsFov();
 	
-	TCODList<EntityMonster*>& getMonstersList() { return monsters_; }
+	TCODList<EntityMonster*>& getPnjsList() { return pnjs_; }
 	TCODList<EntityItem*>& getItemsList() { return items_; }
 	TCODList<EntityFixedItem*>& getFixedItemsList() { return fixedItems_; }
 	
@@ -53,6 +54,8 @@ public:
 	
 	Room* getFirstRoom() { return rooms_.get(0); }
 	Room* getLastRoom() { return rooms_.peek(); }
+	
+	bool getShowPnjsFov() const { return showPnjsFov_; }
 	
 private:
 	friend class BspListener;
@@ -68,8 +71,9 @@ private:
 	void createStairUp(const int& px, const int& py);
 	void createStairDown(const int& px, const int& py);
 	EntityFixedItem* createGazTrap(const int& px, const int& py);
-	void createCommand(const int& px, const int& py, EntityFixedItem* pItemtoActive);
-	void createMine(const int& px, const int& py);
+	void createLever(const int& px, const int& py, EntityFixedItem* pItemtoActive);
+	void createRemoteControl(const int& px, const int& py, EntityItem* pItemtoActive);
+	EntityItem* createMine(const int& px, const int& py);
 	
 	TCODRandom* rnd_;
 
@@ -77,9 +81,11 @@ private:
 	Tile* tiles_;
 	
 	TCODList<Room*> rooms_;
-	TCODList<EntityMonster*> monsters_;
+	TCODList<EntityMonster*> pnjs_;
 	TCODList<EntityItem*> items_;
 	TCODList<EntityFixedItem*> fixedItems_;
+	
+	bool showPnjsFov_;
 	
 	int width_;
 	int height_;

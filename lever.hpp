@@ -1,15 +1,15 @@
-#ifndef COMMAND_HPP
-#define COMMAND_HPP
+#ifndef LEVER_HPP
+#define LEVER_HPP
 
 #include "entityfixeditem.hpp"
 #include "entitymobile.hpp"
 #include <iostream>
 
-class Command : public EntityFixedItem
+class Lever : public EntityFixedItem
 {
 public:
-    Command();
-    ~Command();
+    Lever();
+    ~Lever();
 
 	void render();
 	void update();
@@ -24,7 +24,7 @@ public:
 /**
  * Constructeur
  */
-Command::Command() :
+Lever::Lever() :
 	EntityFixedItem()
 {
 }
@@ -32,14 +32,14 @@ Command::Command() :
 /**
  * Destructeur
  */
-Command::~Command()
+Lever::~Lever()
 {
 }
 
 /**
  * Utilisation de l'item directement au sol
  */
-void Command::use(EntityMobile* powner)
+void Lever::use(EntityMobile* powner)
 {
 	if (!ItemLink)
 		Engine::getInstance()->getGui().message(TCODColor::green, "Le levier n'est relié à rien...");
@@ -48,11 +48,11 @@ void Command::use(EntityMobile* powner)
 	ItemLink->use(powner);
 }
 
-void Command::update()
+void Lever::update()
 {
 }
 
-void Command::render()
+void Lever::render()
 {
 	TCODConsole::root->setChar(x, y, chr);
 	TCODConsole::root->setCharForeground(x, y, color);

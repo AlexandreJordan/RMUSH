@@ -109,37 +109,47 @@ void Engine::showDevConsole()
 	console.printFrame(0, 0, DEV_CONSOLE_WIDTH, DEV_CONSOLE_HEIGHT, true, TCOD_BKGND_DEFAULT, "devconsole");
 	console.setDefaultForeground(TCODColor::white);
 	
-	//système
-	console.print(1, 2, "-> Systeme");
-	console.print(1, 4, "FPS : %i", TCODSystem::getFps());
-	//map
-	console.print(1, 10, "-> Carte");
-	console.print(1, 12, "Taille : %i, %i", map_.getCurrentLevel().getWidth(), map_.getCurrentLevel().getHeight());
-	console.print(1, 13, "Joueur position : %i, %i", player_.x, player_.y);
-	console.print(1, 14, "Level courant : %i", map_.getCurrentLevelCount());
-	
-	//items/objets
-	console.print(28, 2, "-> Mobile");
-	console.print(28, 4, "Monstres : %i", map_.getCurrentLevel().getMonstersList().size());
-	console.print(28, 5, "Items : %i", map_.getCurrentLevel().getItemsList().size());
-	
-	TCODConsole::blit(&console, 0, 0, 
-						DEV_CONSOLE_WIDTH, 
-						DEV_CONSOLE_HEIGHT, 
-						TCODConsole::root, 
-						(int)(WINDOW_WIDTH - DEV_CONSOLE_WIDTH) / 2,
-						(int)(WINDOW_HEIGHT - DEV_CONSOLE_HEIGHT) / 2);
-	TCODConsole::flush();
-	
 	TCOD_key_t key;
-	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
-	
-	switch(key.vk)
+	bool isClosed = false;
+
+	//
+	//boucle d'affichage
+	//
+	while (!isClosed)
 	{
-		case TCODK_CHAR : return;
-		case TCODK_F1	: map_.getCurrentLevel().showPnjsFov();
+		//système
+		console.print(1, 2, "-> Systeme");
+		console.print(1, 4, "FPS : %i", TCODSystem::getFps());
+		//map
+		console.print(1, 10, "-> Carte");
+		console.print(1, 12, "Taille : %i, %i", map_.getCurrentLevel().getWidth(), map_.getCurrentLevel().getHeight());
+		console.print(1, 13, "Joueur position : %i, %i", player_.x, player_.y);
+		console.print(1, 14, "Level courant : %i", map_.getCurrentLevelCount());
+		
+		//items/objets
+		console.print(28, 2, "-> Mobile");
+		console.print(28, 4, "Monstres : %i", map_.getCurrentLevel().getPnjsList().size());
+		console.print(28, 5, "Items : %i", map_.getCurrentLevel().getItemsList().size());
+		
+		//vars
+		console.print(1, 20, "-> Vars");
+		console.print(1, 21, "FOV pnjs : %i", map_.getCurrentLevel().getShowPnjsFov());
+
+		//gestion de la console
+		TCODConsole::blit(&console, 0, 0, 
+					  DEV_CONSOLE_WIDTH, 
+					  DEV_CONSOLE_HEIGHT, 
+					  TCODConsole::root, 
+					  (int)(WINDOW_WIDTH - DEV_CONSOLE_WIDTH) / 2, 
+					  (int)(WINDOW_HEIGHT - DEV_CONSOLE_HEIGHT) / 2);
+		TCODConsole::flush();
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+
+		switch(key.vk)
+		{
+			case TCODK_ESCAPE 	: isClosed  = true; break;
+			case TCODK_F1		: map_.getCurrentLevel().switchShowPnjsFov(); break;
+			default				: break;
+		}
 	}
-	
-	if (key.vk == TCODK_CHAR)
-		return;
 }

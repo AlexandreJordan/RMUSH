@@ -26,7 +26,7 @@ private:
 	TCODList<EntityItem*> choseMultiFromList(TCODList<EntityItem*> plist);					//retourne une liste d'item choisi dans plist
 	
 	bool addToInventory(EntityItem* item);													//ajoute l'item dans l'inventaire
-	bool dropToGround(EntityItem* item);													//dépose un objet au sol
+	void dropToGround(EntityItem* item);													//dépose un objet au sol
 	void selectTile(int&px, int& py, const float& prange);
 	
 	EntityFixedItem* getFixedItemFromTile(const int& px, const int& py);					//retourne un pointeur sur l'item au sol
