@@ -12,6 +12,8 @@ public:
 
 	void render();				//rendu de l'entité
 
+	void rtupdate();			//DEV update temps réel
+
 	float life;					//niveau de vie actuel
 	float maxLife;				//vie maximale
 	float defense;				//point de défense

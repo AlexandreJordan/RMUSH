@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
 		engine->update();
 		engine->render();
 		
-		TCODConsole::root->hline(2, INFOS_POS_Y - 1, WINDOW_WIDTH - 4);
         TCODConsole::flush();
     }
 	

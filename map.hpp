@@ -1,5 +1,5 @@
-#ifndef Map_HPP
-#define Map_HPP
+#ifndef MAP_HPP
+#define MAP_HPP
 
 #include "libtcod.hpp"
 #include "constants.hpp"

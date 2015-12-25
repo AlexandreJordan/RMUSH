@@ -29,6 +29,15 @@ void EntityPlayer::render()
 	TCODConsole::root->setCharForeground(x, y, color);
 }
 
+
+void EntityPlayer::rtupdate()
+{
+	float frnd = TCODRandom::getInstance()->getFloat(0.0f, 1.0f);
+
+	color = TCODColor::red * frnd;
+}
+
+
 void EntityPlayer::update()
 {
 	int nx = 0;
@@ -45,8 +54,9 @@ void EntityPlayer::update()
 	}
 	
 	//un déplacement est lancé
-	//mise à jour de la position du joueur
-	//traitement du fov
+	//-> un nouveau tour est lancé (maj pnj, items, etc)
+	//-> mise à jour de la position du joueur
+	//-> traitement du fov
 	if (nx != 0 || ny != 0)
 	{
 		Engine::getInstance()->setMainStatus(NEW_TURN);

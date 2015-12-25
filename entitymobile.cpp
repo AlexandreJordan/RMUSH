@@ -38,3 +38,7 @@ void EntityMobile::render()
 			}
 		}
 }
+
+void EntityMobile::rtupdate()
+{
+}

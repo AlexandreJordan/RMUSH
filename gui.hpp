@@ -22,7 +22,7 @@ public:
     ~Gui();
 
 	void render();
-	void message(const TCODColor& pcolor, const std::string& ptext, ...);
+	void message(const TCODColor& pcolor, const std::string ptext, ...);
 	void clear();
 
 private:

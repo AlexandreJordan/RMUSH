@@ -10,20 +10,20 @@
 #define CONSTANTS_HPP
 
 //window
-static const int WINDOW_WIDTH 					= 120;
-static const int WINDOW_HEIGHT 					= 90;
+static const int WINDOW_WIDTH 					= 90;
+static const int WINDOW_HEIGHT 					= 40;
+
+//carte
+static const int MAP_WIDTH						= WINDOW_WIDTH;
+static const int MAP_HEIGHT						= 35;
 
 //infos
 static const int INFOS_POS_X 					= 1;
-static const int INFOS_POS_Y 					= 75;
-static const int INFOS_WIDTH 					= 120;
-static const int INFOS_HEIGHT 					= 15;
-static const int MESSAGES_LINES					= 12;
-static const int MESSAGES_POS_X					= 40;
-
-//carte
-static const int MAP_WIDTH 						= WINDOW_WIDTH;
-static const int MAP_HEIGHT 					= WINDOW_HEIGHT - INFOS_HEIGHT - 1;
+static const int INFOS_POS_Y 					= MAP_HEIGHT;
+static const int INFOS_WIDTH 					= WINDOW_WIDTH;
+static const int INFOS_HEIGHT 					= WINDOW_HEIGHT - MAP_HEIGHT;
+static const int MESSAGES_LINES					= 5;
+static const int MESSAGES_POS_X					= 30;
 
 //pièces
 static const int ROOM_MIN_SIZE 					= 6;
@@ -49,6 +49,10 @@ static const int EQUIPMENT_HEIGHT				= 35;
 //console de dev
 static const int DEV_CONSOLE_WIDTH				= 60;
 static const int DEV_CONSOLE_HEIGHT				= 50;
+
+//console d'aide
+static const int HELP_CONSOLE_WIDTH				= 60;
+static const int HELP_CONSOLE_HEIGHT			= 50;
 
 //couleurs des messages
 static const TCODColor C_MESS_INFO				= TCODColor::white;

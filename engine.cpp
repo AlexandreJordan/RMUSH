@@ -10,9 +10,11 @@ void Engine::initialize()
 {
 	//création de la console principale
 	//définition de la limite des FPS
-	TCODConsole::setCustomFont("../data/fonts.png", TCOD_FONT_LAYOUT_ASCII_INCOL | TCOD_FONT_TYPE_GREYSCALE);
+	TCODConsole::setCustomFont("./data/fonts/font-5.png", (TCOD_FONT_TYPE_GREYSCALE | TCOD_FONT_LAYOUT_ASCII_INROW));
 	TCODConsole::initRoot(WINDOW_WIDTH, WINDOW_HEIGHT, "RMush - AJ", false);
 	TCODSystem::setFps(60);
+	TCODConsole::root->mapAsciiCodesToFont(0, 255, 0, 0);
+	TCODConsole::root->setKeyboardRepeat(175, 30);
 	
 	//création du moteur de nombre aléatoire et génération
 	//d'une seed pour pouvoir regénérer les mêmes éléments
@@ -53,11 +55,14 @@ void Engine::update()
 		case TCODK_DELETE	: gui_.clear(); break;
 		//affiche la console de développement
 		case TCODK_F2		: showDevConsole(); break;
+		//affiche l'aide
+		case TCODK_F1		: showHelp(); break;
         default: break;
 	}
 	
 	//mise à jour du joueur
 	player_.update();
+	player_.rtupdate();
 	
 	//mise à jour de la carte
 	map_.update();
@@ -76,7 +81,7 @@ void Engine::render()
 	//dessin du joueur
 	player_.render();
 	
-	//TODO dessin du gui
+	//dessin du gui
 	gui_.render();
 }
 
@@ -152,4 +157,47 @@ void Engine::showDevConsole()
 			default				: break;
 		}
 	}
+}
+
+/**
+ * Affiche l'aide du jeu
+ *	- Liste des commandes
+ */
+void Engine::showHelp()
+{
+	TCODConsole console(HELP_CONSOLE_WIDTH, HELP_CONSOLE_HEIGHT);
+	console.setDefaultBackground(TCODColor(200, 180, 50));
+	console.printFrame(0, 0, HELP_CONSOLE_WIDTH, HELP_CONSOLE_HEIGHT, true, TCOD_BKGND_DEFAULT, "Aide");
+	console.setDefaultForeground(TCODColor::white);
+
+	TCOD_key_t key;
+
+	//système
+	console.print(1, 3, "Commandes");
+	console.print(1, 5, "Déplacement");
+	console.print(1, 6, "    8");
+	console.print(1, 7, "    |");
+	console.print(1, 8, "4 ----- 6");
+	console.print(1, 9, "    |");
+	console.print(1, 10, "    2");
+	console.print(1, 12, "Monter / Descendre                : < >");
+	console.print(1, 15, "Récupérer un item                 : g");
+	console.print(1, 16, "Déposer un item                   : d");
+	console.print(1, 17, "Utiliser un objet de l'inventaire : a");
+	console.print(1, 18, "Utiliser un objet au sol          : u");
+	console.print(1, 19, "Ouvrir l'inventaire               : i");
+	console.print(1, 20, "Afficher les items d'une case     : x");
+
+	//gestion de la console
+	TCODConsole::blit(&console, 0, 0,
+		HELP_CONSOLE_WIDTH,
+		HELP_CONSOLE_HEIGHT,
+		TCODConsole::root,
+		(int)(WINDOW_WIDTH - HELP_CONSOLE_WIDTH) / 2,
+		(int)(WINDOW_HEIGHT - HELP_CONSOLE_HEIGHT) / 2);
+	TCODConsole::flush();
+	TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+
+	if (key.vk == TCODK_ESCAPE)
+		return;
 }

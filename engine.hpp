@@ -51,6 +51,7 @@ public:
 private:
 	void initializePlayer();							//création et initialisation du joueur
 	void showDevConsole();								//affiche la console de développement
+	void showHelp();									//affiche la console d'aide
 
 	EntityPlayer player_;								//le joueur
 	

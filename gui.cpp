@@ -32,18 +32,17 @@ void Gui::render()
 	console_->clear();
 
 	//informations joueur
-	renderBar(	0, 1, 20, "Vie", 
+	renderBar(	0, 0, 20, "Vie", 
 				Engine::getInstance()->getPlayer().life, 
 				Engine::getInstance()->getPlayer().maxLife, 
 				TCODColor::red, 
 				TCODColor::blue
 			 );
-	console_->print(0, 2, "Force : %f", 10.0f);
-	console_->print(0, 3, "Dexterité : %f", 10.0f);
-	console_->print(0, 4, "Furtivité : %f", 10.0f);
+	console_->print(0, 1, "Force : %f", 10.0f);
+	console_->print(0, 2, "Dexterité : %f", 10.0f);
+	console_->print(0, 3, "Furtivité : %f", 10.0f);
 	
 	//messages
-	//TODO Rendre les message plus vieux moins lumineux
 	int line 		= 0;
 	float colorCoef = 0.4f;
 	for (GuiMessage **it = messages_.begin(); it != messages_.end(); it++)
@@ -93,7 +92,7 @@ void Gui::renderBar(const int& px, const int& py, const int& pwidth, const std::
  * @param color Couleur du texte
  * @param text Texte à afficher
  */
-void Gui::message(const TCODColor& pcolor, const std::string& ptext, ...)
+void Gui::message(const TCODColor& pcolor, const std::string ptext, ...)
 {
 	//construction du texte avec les paramètres
 	va_list ap;

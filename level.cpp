@@ -36,12 +36,6 @@ public:
 			//création de la pièce
 			level_.createRoom((roomCount == 0), posX, posY, posX + width - 1, posY + height - 1);
 			
-			//création d'un couloir vers la dernière si ce n'est pas la première pièce
-			/*if (roomCount != 0) {
-				level_.dig(lastRoomCenterX, lastRoomCenterY, posX + (width / 2), lastRoomCenterY);
-				level_.dig(lastRoomCenterX, lastRoomCenterY, lastRoomCenterX, posY + (height / 2));
-			}*/
-			
 			//on garde le centre de la pièce
 			lastRoomCenterX = posX + (width / 2);
 			lastRoomCenterY = posY + (height / 2);

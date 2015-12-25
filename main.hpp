@@ -16,13 +16,11 @@ class Entity;
 //TODO retour à la ligne automatique dans les messages
 //TODO Utilisation du fileparser pour créer des objets avec caractéristiques
 //TODO Commentaires de classe
-//TODO renommer monsters_ en pnjs_
 
 //---> OUTIL DEV
 
 //---> ENGINE
 //TODO sauvegarde / chargement / menu de jeu
-//TODO fenêtre d'aide
 //TODO Un monstre par case
 
 
@@ -34,11 +32,14 @@ class Entity;
 //TODO Explosion avec destruction des murs
 //TODO attaque pnj
 //TODO gestion de la défense
+//TODO rougir la zone ou un monstre est mort
 
 
 //---> GUI
 //TODO information sur les items dans l'inventaire
+//TODO informations d'une case affichées en haut à droite de la fenetre ou dans la liste des messages
 
 
 //---> MAP
 //TODO chargement d'une carte définit dans une fichier texte (level fixe)
+//TODO génération de niveau avec par point aléatoire (enyss)
