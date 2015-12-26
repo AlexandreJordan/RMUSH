@@ -25,6 +25,7 @@ class Entity;
 
 
 //---> GAMEPLAY
+//TODO animation des cases avec les couleurs
 //TODO combat avec arme de jets
 //TODO Piège et nuage
 //TODO gestion de la furtivité
@@ -33,6 +34,7 @@ class Entity;
 //TODO attaque pnj
 //TODO gestion de la défense
 //TODO rougir la zone ou un monstre est mort
+//TODO gestion du feu avec propagation
 
 
 //---> GUI
