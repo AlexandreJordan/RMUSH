@@ -36,14 +36,10 @@ public:
     float speedPlayerInfo;
 
 private:
+    void bar(const int& px, const int& py, const int& pwidth, const float& pmax, const float& pvalue);
+
     TCODConsole* console_;
-
-    void renderBar(const int& px, const int& py, const int& pwidth, const std::string& ptext,
-                   const float& pvalue, const float& pmaxValue, const TCODColor& pbarColor,
-                   const TCODColor& pbackColor);
-
     TCODList<GuiMessage*> messages_;
-
 };
 
 #endif

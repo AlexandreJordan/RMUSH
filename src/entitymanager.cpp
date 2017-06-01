@@ -82,8 +82,6 @@ EntityPnj* EntityManager::getPnj(const int& pid)
 //
 EntityItem* EntityManager::getItem(const int& pid)
 {
-    cout << "getItem id : " << pid << endl;
-
     map<int, EntityItem*>::iterator it;
     it = items_.find(pid);
 
@@ -102,11 +100,7 @@ EntityFixedItem* EntityManager::getFixedItem(const int& pid)
     it = fixedItems_.find(pid);
 
     if (it != fixedItems_.end())
-    {
-        std::cout << "it : " << it->first << std::endl;
-        cout << "name : " << it->second->name << endl;
         return it->second;
-    }
     else
         return nullptr;
 }

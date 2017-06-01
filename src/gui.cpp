@@ -4,9 +4,10 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdarg.h>
-//#include <wchar.h>
 #include <iostream>
 #include "constants.hpp"
+
+using namespace std;
 
 Gui::Gui() : lifeInfo(0), maxLifeInfo(0), strengthInfo(0), dexterityInfo(0), defenseInfo(0), lightOnInfo(false),
     totalRoundInfo(0.0f), speedPlayerInfo(0.0f)
@@ -21,7 +22,7 @@ Gui::~Gui()
 }
 
 //
-// Rendu dans la scÃªne
+// Rendu dans la scˆne
 //  - Dessin des infos joueur
 //  - Dessin des messages
 //
@@ -30,14 +31,14 @@ void Gui::render()
     console_->setDefaultBackground(TCODColor::black);
     console_->clear();
 
-    //TODO - A CODER - INFOS JOEUR
-    //renderBar(0, 0, 20, "Vie", lifeInfo * 1.0f, maxLifeInfo * 1.0f, TCODColor::red, TCODColor::blue);
-
     console_->setDefaultForeground(TCODColor::white);
-    console_->print(0, 1, "For : %i Dex : %i Def : %i", strengthInfo, dexterityInfo, defenseInfo);
-    console_->print(0, 2, "Speed : %i", speedPlayerInfo);
-    console_->print(15, 2, "Vit : %i", totalRoundInfo);
-    console_->print(0, 4, "Torche : %s", lightOnInfo ? "On" : "Off");
+    console_->print(0, 1, "Vie : %i/%i", lifeInfo, maxLifeInfo);
+    console_->print(0, 2, "Bruit");
+    console_->print(0, 3, "Mutations : x      For. : %i", strengthInfo);
+    console_->print(0, 4, "Vitesse   : %i      Dex. : %i", speedPlayerInfo, dexterityInfo);
+    console_->print(0, 5, "Position  : x      D‚f. : %i", defenseInfo);
+
+    bar(19, 1, 10, maxLifeInfo, lifeInfo);
 
     //messages
     int line(0);
@@ -49,12 +50,9 @@ void Gui::render()
         GuiMessage* mess = *it;
         console_->setDefaultForeground(mess->color * colorCoef);
 
-        //afficher le message dans la console
         resHeight = console_->printRect(MESSAGES_POS_X, line, INFOS_WIDTH - MESSAGES_POS_X - 2, 2, mess->text.c_str());
 
         line += resHeight;
-
-        //line++;
 
         if (colorCoef < 1.0f)
             colorCoef += 0.08f;
@@ -65,31 +63,21 @@ void Gui::render()
 }
 
 //
-// Affichage d'une jauge
-// px Position de la jauge
-// py Position de la jauge
-// pwidth Largeur de la jauge
-// ptext Texte a afficher dans la barre
-// pvalue Valeur actuelle de la barre
-// pmaxValue Valeur de la barre a 100%
-// pbarColor Couleur de remplissage de value
-// pbackColor Couleur de fond
-//
-void Gui::renderBar(const int& px, const int& py, const int& pwidth, const std::string& ptext,
-                    const float& pvalue, const float& pmaxValue, const TCODColor& pbarColor,
-                    const TCODColor& pbackColor)
+// Affichage d'une barre de progression sous cette forme :
+//                        |#####----|
+void Gui::bar(const int& px, const int& py, const int& pwidth, const float& pmax, const float& pvalue)
 {
-    console_->setDefaultBackground(pbackColor);
-    console_->rect(px, py, pwidth, 1, false, TCOD_BKGND_SET);
+    string finalBar(pwidth, '-');
+    finalBar.insert(0, "|");
+    finalBar.append("|");
 
-    float widthValue = ( (pvalue * pwidth) / pmaxValue);
-    std::cout << "pvalue / pwidth : " << pvalue << " / " << pwidth << " || " << "pmaxValue : " << pmaxValue << std::endl;
-    console_->setDefaultBackground(pbarColor);
-    std::cout << "px / py : " << px << " / " << py << " || " << "widthvalue : " << widthValue << std::endl;
-    console_->rect(px, py, (int)widthValue, 1, false, TCOD_BKGND_SET);
+    int valueBar = (pvalue * pwidth) / pmax;
+
+    for (int i = 1; i <= valueBar; i++)
+        finalBar.at(i) = '#';
 
     console_->setDefaultForeground(TCODColor::white);
-    console_->printEx(px, py, TCOD_BKGND_NONE, TCOD_LEFT, "%s : %i / %i", ptext.c_str(), int(pvalue), int(pmaxValue));
+    console_->printEx(px, py, TCOD_BKGND_NONE, TCOD_LEFT, "%s", finalBar.c_str());
 }
 
 //
@@ -99,14 +87,14 @@ void Gui::renderBar(const int& px, const int& py, const int& pwidth, const std::
 //
 void Gui::message(const TCODColor& pcolor, const std::string ptext, ...)
 {
-    //construction du texte avec les paramÃªtres
+    //construction du texte avec les paramˆtres
     va_list ap;
     char buff[128];
     va_start(ap, ptext);
     vsprintf(buff, ptext.c_str(), ap);
     va_end(ap);
 
-    //la liste est complÃªte, suppression du premier
+    //la liste est complˆte, suppression du premier
     if (messages_.size() == MESSAGES_LINES)
     {
         GuiMessage* mess = messages_.get(0);

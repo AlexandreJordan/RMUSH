@@ -45,14 +45,10 @@ public:
     long mainSeed;                          //...
     int timeTotalRound;                     //temps total de la partie (en tour)
 
-
-    //retourne un item choisi dans plist
     EntityItem* choseOneFromItemList(   std::vector<int> plistId,
                                         const std::string& title,
                                         const EntityItemType& ptype = EntityItemType::ALL);
-
-    //retourne une liste d'item choisi dans plist
-    std::vector<EntityItem*> choseMultiFromItemList(std::vector<int> plistId);
+    std::vector<EntityItem*> choseMultiFromItemList(const std::vector<int>& plistId, const std::string& title);
 
     EntityFixedItem* choseOneFromItemFixedList(const std::vector<int> plistId, const std::string& title);
 

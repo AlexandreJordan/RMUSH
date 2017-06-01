@@ -27,8 +27,8 @@ Engine::~Engine()
 //
 void Engine::newGame()
 {
-    //cr‚ation du moteur de nombre al‚atoire et g‚n‚ration
-    //d'une seed pour pouvoir reg‚n‚rer les mˆmes ‚l‚ments
+    //cr?ation du moteur de nombre al?atoire et g?n?ration
+    //d'une seed pour pouvoir reg?n?rer les m?mes ?l?ments
     mainSeed            = TCODRandom::getInstance()->getInt(0, 0x7FFFFFFF);
     randomEngine        = new TCODRandom(mainSeed, TCOD_RNG_CMWC);
 
@@ -73,16 +73,16 @@ void Engine::loadGame()
 }
 
 //
-// Mise … jour du jeu
-//  Gestion des touches pour les fenˆtres systŠme
+// Mise ? jour du jeu
+//  Gestion des touches pour les fen?tres syst?me
 void Engine::update()
 {
     mainStatus_ = GameStatus::IDLE;
 
-    //touche appuy‚e
+    //touche appuy?e
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &mainKey_, nullptr);
 
-    //gestion des touches systŠmes
+    //gestion des touches syst?mes
     switch (mainKey_.vk)
     {
     //vide la liste des messages
@@ -95,7 +95,7 @@ void Engine::update()
         showHelp();
         break;
 
-    //affiche la console de d‚veloppement
+    //affiche la console de d?veloppement
     case TCODK_F2       :
         showDevConsole();
         break;
@@ -124,7 +124,7 @@ void Engine::update()
     //suppression du fichier de sauvegarde
     case TCODK_F12      :
         if (dataManager_.deleteSaveFile())
-            gui_.message(TCODColor::white, "Fichier de sauvegarde supprim‚");
+            gui_.message(TCODColor::white, "Fichier de sauvegarde supprim?");
         else
             gui_.message(TCODColor::white, "Impossible de supprimer le fichier de sauvegarde");
 
@@ -144,14 +144,14 @@ void Engine::update()
         break;
     }
 
-    //mise … jour du joueur
+    //mise ? jour du joueur
     player_.update();
     player_.rtupdate();
 
-    //mise … jour de la carte
+    //mise ? jour de la carte
     map_.update();
 
-    //mise … jour du GUI
+    //mise ? jour du GUI
     gui_.totalRoundInfo = timeTotalRound;
 }
 
@@ -168,7 +168,7 @@ void Engine::render()
 }
 
 //
-// Change tout ce qui se trouve sur la case x,y dans le niveau inf‚rieur
+// Change tout ce qui se trouve sur la case x,y dans le niveau inf?rieur
 //  Items
 //  Pnjs
 //  Joueur
@@ -208,7 +208,7 @@ void Engine::changeAllToDownLevel(const unsigned int& plevel, const unsigned int
 }
 
 //
-// Change l'entit‚ donn‚ au niveau inf‚rieur
+// Change l'entit? donn? au niveau inf?rieur
 //
 /*void Level::changeEntityToDownLevel(Entity* pentity)
 {
@@ -226,17 +226,17 @@ void Engine::changeAllToDownLevel(const unsigned int& plevel, const unsigned int
 }*/
 
 //
-// Affiche dans une fenˆtre la liste plist et retourne l'‚l‚ment s‚lectionn‚ par le joueur sinon nullptr
+// Affiche dans une fenÃªtre la liste plist et retourne l'Ã©lÃ©ment sÃ©lectionnÃ© par le joueur sinon nullptr
 //
 EntityItem* Engine::choseOneFromItemList(vector<int> plistId, const string& title, const EntityItemType& ptype)
 {
-    static TCODConsole console(INVENTORY_WIDTH, INVENTORY_HEIGHT);
+    static TCODConsole console(SELECTION_WIDTH, SELECTION_HEIGHT);
     console.setDefaultBackground(TCODColor(200, 180, 50));
-    console.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, title.c_str());
+    console.printFrame(0, 0, SELECTION_WIDTH, SELECTION_HEIGHT, true, TCOD_BKGND_DEFAULT, title.c_str());
     console.setDefaultForeground(TCODColor::white);
 
     int shortcut                 = 'a';
-    int posY                     = 1;
+    int posY                     = 2;
     vector<EntityItem*> itemList = entitiesManager_.getItems(plistId);
     
     for (EntityItem* item: itemList)
@@ -251,11 +251,11 @@ EntityItem* Engine::choseOneFromItemList(vector<int> plistId, const string& titl
     }
 
     TCODConsole::blit(&console, 0, 0,
-                      INVENTORY_WIDTH,
-                      INVENTORY_HEIGHT,
+                      SELECTION_WIDTH,
+                      SELECTION_HEIGHT,
                       TCODConsole::root,
-                      (int)(WINDOW_WIDTH - INVENTORY_WIDTH) / 2,
-                      (int)(WINDOW_HEIGHT - INVENTORY_HEIGHT) / 2);
+                      (int)(WINDOW_WIDTH - SELECTION_WIDTH) / 2,
+                      (int)(WINDOW_HEIGHT - SELECTION_HEIGHT) / 2);
     TCODConsole::flush();
 
     TCOD_key_t key;
@@ -274,17 +274,17 @@ EntityItem* Engine::choseOneFromItemList(vector<int> plistId, const string& titl
 
 //
 // Affiche une boite de dialogue avec la liste des items contenu dans plistId
-//  Retourne les ‚l‚ments marqu‚ d'un +
+//  Retourne les Ã©lÃ©ments marquÃ© d'un +
 //  Item marqueur
-//      Non s‚lectionn‚  : -
-//      S‚lectionn‚      : +
+//      Non s?lectionn?  : -
+//      S?lectionn?      : +
 //
-vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
+vector<EntityItem*> Engine::choseMultiFromItemList(const vector<int>& plistId, const string& title)
 {
-    //cr‚ation d'une console pour la frame
-    static TCODConsole console(INVENTORY_WIDTH, INVENTORY_HEIGHT);
+    //crÃ©ation d'une console pour la frame
+    static TCODConsole console(SELECTION_WIDTH, SELECTION_HEIGHT);
     console.setDefaultBackground(TCODColor(200, 180, 50));
-    console.printFrame(0, 0, INVENTORY_WIDTH, INVENTORY_HEIGHT, true, TCOD_BKGND_DEFAULT, "Drop");
+    console.printFrame(0, 0, SELECTION_WIDTH, SELECTION_HEIGHT, true, TCOD_BKGND_DEFAULT, title.c_str());
     console.setDefaultForeground(TCODColor::white);
 
     TCOD_key_t key;
@@ -295,7 +295,7 @@ vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
     {
         int shortcut  = 'a';
         char selector = '-';
-        int posY      = 1;
+        int posY      = 2;
 
         vector<EntityItem*> itemList = entitiesManager_.getItems(plistId);
 
@@ -312,11 +312,11 @@ vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
 
         //gestion de la console
         TCODConsole::blit(&console, 0, 0,
-                          INVENTORY_WIDTH,
-                          INVENTORY_HEIGHT,
+                          SELECTION_WIDTH,
+                          SELECTION_HEIGHT,
                           TCODConsole::root,
-                          (int)(WINDOW_WIDTH - INVENTORY_WIDTH) / 2,
-                          (int)(WINDOW_HEIGHT - INVENTORY_HEIGHT) / 2);
+                          (int)(WINDOW_WIDTH - SELECTION_WIDTH) / 2,
+                          (int)(WINDOW_HEIGHT - SELECTION_HEIGHT) / 2);
         TCODConsole::flush();
         TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, nullptr, true);
 
@@ -329,7 +329,7 @@ vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
                 item->isSelected = false;
         }
 
-        //ajout / suppression dans la liste des s‚lectionn‚s
+        //ajout / suppression dans la liste des sÃ©lectionnÃ©s
         if (key.vk == TCODK_CHAR)
         {
             int objIndex = key.c - 'a';
@@ -355,7 +355,6 @@ vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
                     item->isSelected = false;
                 }
             }
-
             isClosed = true;
         }
     }
@@ -365,7 +364,7 @@ vector<EntityItem*> Engine::choseMultiFromItemList(vector<int> plistId)
 
 
 //
-// Affiche dans une fenˆtre la liste de plist et retourne l'‚l‚ment s‚lectionn‚ par le joueur sinon NULL
+// Affiche dans une fenÃªtre la liste de plist et retourne l'Ã©lÃ©ment sÃ©lectionnÃ© par le joueur sinon NULL
 //
 EntityFixedItem* Engine::choseOneFromItemFixedList(const vector<int> plistId, const string& title)
 {
@@ -410,7 +409,7 @@ EntityFixedItem* Engine::choseOneFromItemFixedList(const vector<int> plistId, co
 
 
 //
-// Affiche la console de d‚veloppement - Informations sur le jeu
+// Affiche la console de d?veloppement - Informations sur le jeu
 //
 void Engine::showDevConsole()
 {
@@ -427,7 +426,7 @@ void Engine::showDevConsole()
     //
     while (!isClosed)
     {
-        //systˆme
+        //syst?me
         console.print(1, 2, "###  Systeme  ###");
         console.print(1, 4, "FPS : %i", TCODSystem::getFps());
         //map
@@ -479,14 +478,14 @@ void Engine::showHelp()
     string help = R"(
                         --- Actions ---
 
-     D‚placement                             : p. num
+     D?placement                             : p. num
      Monter / Descendre                      : < >
      Equiper un objet                        : e
-     R‚cup‚rer un item                       : g
-     D‚poser un item                         : d
+     R?cup?rer un item                       : g
+     D?poser un item                         : d
      Utiliser un objet de l'inventaire       : a
      Utiliser un objet au sol                : u
-     Se d‚placer directement sur un point    : x
+     Se d?placer directement sur un point    : x
      Activer la lampe du joueur              : l
  
  
@@ -495,13 +494,13 @@ void Engine::showHelp()
  
     Menu                                    : ESC
     Ouvrir l'inventaire                     : i
-    Afficher la t‚l‚commande                : t
+    Afficher la t?l?commande                : t
     Afficher les items d'une case           : c
     Vider la liste des messages             : delete
     Afficher le fov des ennemis             : F4
     )";
 
-    //systˆme
+    //syst?me
     console.print(1, 3, help.c_str());
 
     //gestion de la console
@@ -524,7 +523,7 @@ void Engine::showHelp()
 //  - Quitter (suicide du personnage)
 void Engine::showMenu()
 {
-    //cr‚ation d'une console pour la frame
+    //cr?ation d'une console pour la frame
     static TCODConsole console(MENU_INGAME_WIDTH, MENU_INGAME_HEIGHT);
 
     TCOD_key_t key;
@@ -582,7 +581,7 @@ void Engine::showMenu()
 }
 
 //
-// Mise … jour du temps global : Ajout d'un tour
+// Mise ? jour du temps global : Ajout d'un tour
 //
 void Engine::updateTimeRound()
 {
@@ -590,21 +589,21 @@ void Engine::updateTimeRound()
 }
 
 //
-// Appel‚ lors de la mort ou du suicide du joueur
+// Appel? lors de la mort ou du suicide du joueur
 //
 void Engine::lose()
 {
 }
 
 //
-// Appel‚ lors de la victoire du joueur
+// Appel? lors de la victoire du joueur
 //
 void Engine::win()
 {
 }
 
 //
-// Retourne les donn‚es sous forme de XML
+// Retourne les donn?es sous forme de XML
 //
 string Engine::getDataXml()
 {

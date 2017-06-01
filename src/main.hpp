@@ -61,6 +61,7 @@ class Entity;
 //  - Arme                  - Dexterité
 //  - Dexterité
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // JOUEUR
 //
@@ -95,3 +96,23 @@ class Entity;
 //
 //Mutations     :   Elles affectent les PNJs ainsi que le joueur en modifiant ses caractéristiques
 //                  physiques ou psychiques. Elles peuvent être bénéfiques ou bien engendrer un malus.
+
+///////////////////////////////////////////////////////////////////////////////
+// GUI
+//
+// x Vie
+// x Nombre de mutations
+// x Bruit
+// x Position dans le donjon
+// Arme en main
+// Force
+// Dex
+// Défense
+// Temps écoulé
+// Torche
+//
+// Vie : x / m        |#####---|
+// Bruit              |##------|
+// Mutations : x      For. : x  
+// Arme      : x      Dex. : x
+// Position  : x      Déf. : x

@@ -340,7 +340,7 @@ void EntityPlayer::processKey(const int& key)
         //
         case 'd' :
         {
-            vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(inventory_);
+            vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(inventory_, "D‚poser un objet");
             for (EntityItem* item: selectedItems)
                 dropToGround(item->id);
             break;
@@ -376,7 +376,7 @@ void EntityPlayer::processKey(const int& key)
                         //
                         //afficher une boite de dialogue pour le choix multiple
                         //
-                        vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(itemsList);
+                        vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(itemsList, "S‚lection");
 
                         for (EntityItem* item: selectedItems)
                             addToInventory(item->id);

@@ -61,6 +61,10 @@ static const int INVENTORY_HEIGHT           = 34;
 static const int INVENTORY_POS_Y            = 3;
 static const int INVENTORY_SIZE             = 10;
 
+//fenêtre de sélection
+static const int SELECTION_WIDTH			= 36;
+static const int SELECTION_HEIGHT			= 24;
+
 //télécommande
 static const int REMOTE_WIDTH               = 50;
 static const int REMOTE_HEIGHT              = 30;
