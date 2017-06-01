@@ -10,7 +10,6 @@ class Entity;
 
 //---> AMELIORATION
 //TODO retour à la ligne automatique dans les messages
-//TODO gestion des accents : pb d'encodage des fichiers
 //TODO paufiner la gestion du temps pour les actions.
 //TODO séparer le déplacement et l'action : augmenter la base pour la gestion du temps du joueur
 //TODO gestion des portes
@@ -68,7 +67,7 @@ class Entity;
 //Vie           : Vie du joueur
 //Dextérité     :
 //Défense       : Défense du joueur
-//Les pièces d'armures fournissent des points de défenses supplémentaires
+//                Les pièces d'armures fournissent des points de défenses supplémentaires
 //Furtivité     : Détermine la distance à laquelle les ennemis voit le joueur
 
 
@@ -92,7 +91,7 @@ class Entity;
 // BACKGROUND
 //
 //But du jeu    :   Descendre et détruire la source des mutations. Celle-ci sont générées par le gaz
-//          produit par les champignons des caves.
+//                  produit par les champignons des caves.
 //
 //Mutations     :   Elles affectent les PNJs ainsi que le joueur en modifiant ses caractéristiques
-//          physiques. Elles peuvent être bénéfiques ou bien engendrer un malus.
+//                  physiques ou psychiques. Elles peuvent être bénéfiques ou bien engendrer un malus.

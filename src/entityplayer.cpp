@@ -726,15 +726,13 @@ void EntityPlayer::showInventoryPanel()
         int posY                    = baseListY;
         EntityItem* itemSelected    = nullptr;
 
-        //affichage de l'arme
-        console.print(2, 2, "Arme : %s", (weapon != -1) ? em.getItem(weapon)->name.c_str() : "-");
-
-        //affichage des ‚l‚ments d'armure
-        console.print(2, 4, "headPart  : %s", (aHeadPart  != -1) ? em.getItem(aHeadPart)->name.c_str() : "-");
-        console.print(2, 5, "bodyPart  : %s", (aBodyPart  != -1) ? em.getItem(aBodyPart)->name.c_str() : "-");
-        console.print(2, 6, "handsPart : %s", (aHandsPart != -1) ? em.getItem(aHandsPart)->name.c_str() : "-");
-        console.print(2, 7, "legsPart  : %s", (aLegsPart  != -1) ? em.getItem(aLegsPart)->name.c_str() : "-");
-        console.print(2, 8, "footsPart : %s", (aFootsPart != -1) ? em.getItem(aFootsPart)->name.c_str() : "-");
+        console.print(2, 2,  "Equipement");
+        console.print(2, 6,  "Arme : %s",      (weapon != -1)     ? em.getItem(weapon)->name.c_str()     : "-");
+        console.print(2, 8,  "headPart  : %s", (aHeadPart  != -1) ? em.getItem(aHeadPart)->name.c_str()  : "-");
+        console.print(2, 9,  "bodyPart  : %s", (aBodyPart  != -1) ? em.getItem(aBodyPart)->name.c_str()  : "-");
+        console.print(2, 10, "handsPart : %s", (aHandsPart != -1) ? em.getItem(aHandsPart)->name.c_str() : "-");
+        console.print(2, 11, "legsPart  : %s", (aLegsPart  != -1) ? em.getItem(aLegsPart)->name.c_str()  : "-");
+        console.print(2, 12, "footsPart : %s", (aFootsPart != -1) ? em.getItem(aFootsPart)->name.c_str() : "-");
 
         //affichage de la liste
         vector<EntityItem*>itemList = em.getItems(inventory_);
