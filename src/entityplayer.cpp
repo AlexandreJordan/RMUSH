@@ -838,6 +838,9 @@ void EntityPlayer::showRemotePanel()
         console.rect(28, 16, 17, 5 , true, TCOD_BKGND_SET); // -- 3 --
         console.setDefaultBackground(TCODColor::black);
 
+        //debug
+        //cout << "TU : Item 8 (index, id, name) : " << itemLink.at(8) << " / " << em.getItem(itemLink.at(8))->id << " / " << em.getItem(itemLink.at(8))->name << endl;
+
         //affichage des slots
         console.setDefaultForeground(TCODColor::darkGrey);
         console.printEx(12, 6 , TCOD_BKGND_DEFAULT, TCOD_CENTER, "%s", (itemLink.at(8) != -1) ? em.getItem(itemLink.at(8))->name.c_str() : "libre");
@@ -873,15 +876,18 @@ void EntityPlayer::showRemotePanel()
             switch (key.c)
             {
                 //
-                // activer l'‚l‚ment li‚
+                // activer l'élément lié
                 //
                 case 'a' :
                 {
                     if (itemLink.find(selection) != itemLink.end())
                     {
+                        cout << "TU use item : " << itemLink.at(8) << " / " << em.getItem(itemLink.at(8))->name << endl;
                         if (itemLink.at(selection) != -1)
                         {
-                            em.getItem(itemLink.at(selection))->use(this);
+                            EntityItem* item = em.getItem(itemLink.at(selection));
+                            cout << "TU use item after affect : " << item->id << " / " << item->name << endl;
+                            item->use(this);
                             isClosed = true;
                         }
                     }

@@ -6,7 +6,7 @@
 
 //window
 static const int WINDOW_WIDTH               = 80;
-static const int WINDOW_HEIGHT              = 40;
+static const int WINDOW_HEIGHT              = 45;
 
 //font
 //static const std::string CONSOLE_FONT       = "./data/fonts/tileset.png";
@@ -17,7 +17,7 @@ static const std::string SAVE_FILEPATH      = "./data/save/save.rl";
 
 //carte
 static const int MAP_WIDTH                  = WINDOW_WIDTH;
-static const int MAP_HEIGHT                 = 29;
+static const int MAP_HEIGHT                 = 34;
 static const int LEVELS_COUNT               = 2;
 
 //population
@@ -36,7 +36,7 @@ static const int INFOS_POS_X                = 1;
 static const int INFOS_POS_Y                = MAP_HEIGHT;
 static const int INFOS_WIDTH                = WINDOW_WIDTH;
 static const int INFOS_HEIGHT               = WINDOW_HEIGHT - MAP_HEIGHT;
-static const int MESSAGES_LINES             = 5;
+static const int MESSAGES_LINES             = 9;
 static const int MESSAGES_POS_X             = 30;
 
 //pièces

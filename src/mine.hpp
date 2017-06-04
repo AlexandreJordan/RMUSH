@@ -20,9 +20,9 @@ public:
     void use(EntityMobile* powner);
 
     float rangeDestruction;             //rayon de destruction
-    bool startExplosion;                //gestion de l'explosion dans le temps rÃ©el
+    bool startExplosion;                //gestion de l'explosion dans le temps r‚el
 
-    bool floorDestroy;                  //Vrai : dÃ©struction du sol
+    bool floorDestroy;                  //Vrai : d‚struction du sol
 };
 
 #endif
@@ -50,6 +50,7 @@ void Mine::initNew(const int& px, const int& py, const int& pid, const int& plev
     description         = "Explosition !!!";
     x                   = px;
     y                   = py;
+    eType               = EntityItemType::MINE;
     rangeDestruction    = 5.0f;
     floorDestroy        = true;
     startExplosion      = false;
@@ -77,6 +78,8 @@ std::string Mine::getDataXml()
 
 void Mine::use(EntityMobile* powner)
 {
+    std::cout << "Mine::use" << std::endl;
+
     Map& map = Engine::getInstance()->getMap();
 
     Engine::getInstance()->getGui().message(C_MESS_INFO, "La mine explose !!!");
@@ -85,11 +88,11 @@ void Mine::use(EntityMobile* powner)
 
     if (floorDestroy)
     {
-        //dÃ©truit le sol
+        //d‚truit le sol
         map.getCurrentLevel().digCircleFall(x, y, rangeDestruction);
-        //dÃ©truit les items dans le rayon
+        //d‚truit les items dans le rayon
         map.getCurrentLevel().deleteItemsInCircle(x, y, rangeDestruction, this);
-        //dÃ©truit les items fixes dans le rayon
+        //d‚truit les items fixes dans le rayon
         map.getCurrentLevel().deleteFixedItemsInCircle(x, y, rangeDestruction, nullptr);
     }
 

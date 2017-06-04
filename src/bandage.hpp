@@ -67,10 +67,8 @@ void Bandage::initLoad(const xml_node& pnode)
 std::string Bandage::getDataXml()
 {
     std::stringstream resXml;
-
     resXml << EntityItem::getDataXml();
     resXml << "<lifeRestore>" << std::to_string(lifeRestore) << "</lifeRestore>" << std::endl;
-
     return resXml.str();
 }
 

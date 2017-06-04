@@ -82,11 +82,14 @@ EntityPnj* EntityManager::getPnj(const int& pid)
 //
 EntityItem* EntityManager::getItem(const int& pid)
 {
+    std::cout << "GetItem - pid : " << pid << endl;
     map<int, EntityItem*>::iterator it;
     it = items_.find(pid);
 
-    if (it != items_.end())
+    if (it != items_.end()) {
+        std::cout << "it->second : " << it->second->id << " / " << it->second->name << endl;
         return it->second;
+    }
     else
         return nullptr;
 }
@@ -351,8 +354,6 @@ void EntityManager::loadPnj(const pugi::xml_node& pnode)
 
 void EntityManager::loadItem(const pugi::xml_node& pnode)
 {
-    cout << "loadItem name : " << pnode.child("name").text().as_string() << " / id : " << pnode.child("id").text().as_int() << endl;
-    
     switch (EntityItemType(pnode.child("type").text().as_int()))
     {
         case EntityItemType::BANDAGE:

@@ -32,16 +32,19 @@ void Gui::render()
     console_->clear();
 
     console_->setDefaultForeground(TCODColor::white);
-    console_->print(0, 1, "Vie : %i/%i", lifeInfo, maxLifeInfo);
-    console_->print(0, 2, "Bruit");
-    console_->print(0, 3, "Mutations : x      For. : %i", strengthInfo);
-    console_->print(0, 4, "Vitesse   : %i      Dex. : %i", speedPlayerInfo, dexterityInfo);
-    console_->print(0, 5, "Position  : x      D‚f. : %i", defenseInfo);
+    console_->print(0,  1, "Vie : %i/%i", lifeInfo, maxLifeInfo);
+    console_->print(0,  4, "Mutations : x");
+    console_->print(0,  5, "Vitesse   : %i", speedPlayerInfo);
+    console_->print(0,  6, "Position  : x");
+    console_->print(16, 4, "For. : %i", strengthInfo);
+    console_->print(16, 5, "Dex. : %i", dexterityInfo);
+    console_->print(16, 6, "D‚f. : %i", defenseInfo);
+    console_->print(0,  8, "Arme :");
 
-    bar(19, 1, 10, maxLifeInfo, lifeInfo);
+    bar(16, 1, 10, maxLifeInfo, lifeInfo);
 
     //messages
-    int line(0);
+    int line(1);
     float colorCoef(0.4f);
     int resHeight(0);
 
