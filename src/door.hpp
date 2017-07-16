@@ -16,7 +16,7 @@ public:
     void initNew(const int&, const int&, const int&, Entity* pitemLink);
     void initLoad();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 };
 
 #endif
@@ -43,7 +43,7 @@ void Door::initLoad()
 
 }
 
-void Door::use(EntityMobile* powner)
+void Door::use(EntityPnj* powner)
 {
     block = !block;
     Engine::getInstance()->getGui().message(TCODColor::green, "La porte %s", (block ? " se ferme" : " s'ouvre" ));

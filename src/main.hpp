@@ -20,7 +20,6 @@ class Entity;
 
 
 //---> PNJS
-//TODO Ajouter les pnjs
 //TODO un monstre par case
 
 
@@ -53,6 +52,7 @@ class Entity;
 //---> BUGS
 //BUG DeleteItems / FixedItems : supprimer les liens avec les items liés
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // COMBAT
 //
@@ -71,6 +71,11 @@ class Entity;
 //                Les pièces d'armures fournissent des points de défenses supplémentaires
 //Furtivité     : Détermine la distance à laquelle les ennemis voit le joueur
 
+///////////////////////////////////////////////////////////////////////////////
+// BESTIAIRE
+//
+// Homme mutant
+// Chien
 
 ///////////////////////////////////////////////////////////////////////////////
 // INVENTAIRE
@@ -78,6 +83,7 @@ class Entity;
 //Liste des items portés par le joueur (au nombre de 10)
 //Description de l'item sélectionné
 //Liste des actions possibles sur l'item sélectionné
+//Affichage de l'équipement du joueur
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,17 +105,6 @@ class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 // GUI
-//
-// x Vie
-// x Nombre de mutations
-// x Bruit
-// x Position dans le donjon
-// Arme en main
-// Force
-// Dex
-// Défense
-// Temps écoulé
-// Torche
 //
 // Vie : x / m        |#####---|
 // Bruit              |##------|

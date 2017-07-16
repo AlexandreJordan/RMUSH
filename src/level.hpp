@@ -2,7 +2,6 @@
 #define Level_HPP
 
 #include "entity.hpp"
-#include "entitypnj.hpp"
 #include "pugixml.hpp"
 
 #include <list>

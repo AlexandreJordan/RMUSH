@@ -17,7 +17,7 @@ public:
     void initLoad(const xml_node& pnode);
     std::string getDataXml();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 
     float rangeDestruction;             //rayon de destruction
     bool startExplosion;                //gestion de l'explosion dans le temps r‚el
@@ -76,7 +76,7 @@ std::string Mine::getDataXml()
     return resXml.str();
 }
 
-void Mine::use(EntityMobile* powner)
+void Mine::use(EntityPnj* powner)
 {
     std::cout << "Mine::use" << std::endl;
 

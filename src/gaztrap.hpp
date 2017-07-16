@@ -42,8 +42,8 @@ public:
 
     std::string getDataXml();
 
-    void use(EntityMobile* powner);
-    void launch(EntityMobile* powner);
+    void use(EntityPnj* powner);
+    void launch(EntityPnj* powner);
 
     int radius;                 //diamètre du nuage
 
@@ -100,7 +100,7 @@ std::string GazTrap::getDataXml()
 }
 
 
-void GazTrap::use(EntityMobile* powner)
+void GazTrap::use(EntityPnj* powner)
 {
     Engine::getInstance()->getGui().message(TCODColor::green, "Un nuage de gaz s'échappe d'une trappe.");
 }
@@ -147,7 +147,7 @@ void GazTrap::rtupdate()
 //
 // Déclenchement automatique
 //
-void GazTrap::launch(EntityMobile* ptarget)
+void GazTrap::launch(EntityPnj* ptarget)
 {
     Engine::getInstance()->getGui().message(TCODColor::green, "Vous marchez sur un gaztrap");
 

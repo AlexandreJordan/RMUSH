@@ -9,6 +9,7 @@
 #include "entitymanager.hpp"
 #include "libtcod.hpp"
 #include "pugixml.hpp"
+#include "tools.hpp"
 
 using namespace std;
 
@@ -151,7 +152,13 @@ void Engine::update()
     //mise ? jour de la carte
     map_.update();
 
-    //mise ? jour du GUI
+    //mise à jour du GUI
+    gui_.lifeInfo       = player_.life;
+    gui_.maxLifeInfo    = player_.maxLife;
+    gui_.strengthInfo   = player_.strength;
+    gui_.dexterityInfo  = player_.dexterity;
+    gui_.defenseInfo    = player_.defense;
+    gui_.lightOnInfo    = player_.lightOn;
     gui_.totalRoundInfo = timeTotalRound;
 }
 
@@ -478,15 +485,15 @@ void Engine::showHelp()
     string help = R"(
                         --- Actions ---
 
-     D?placement                             : p. num
-     Monter / Descendre                      : < >
-     Equiper un objet                        : e
-     R?cup?rer un item                       : g
-     D?poser un item                         : d
-     Utiliser un objet de l'inventaire       : a
-     Utiliser un objet au sol                : u
-     Se d?placer directement sur un point    : x
-     Activer la lampe du joueur              : l
+    Déplacement                             : p. num
+    Monter / Descendre                      : < >
+    Equiper un objet                        : e
+    Récupérer un item                       : g
+    Déposer un item                         : d
+    Utiliser un objet de l'inventaire       : a
+    Utiliser un objet au sol                : u
+    Se déplacer directement sur un point    : x
+    Activer la lampe du joueur              : l
  
  
  
@@ -494,7 +501,7 @@ void Engine::showHelp()
  
     Menu                                    : ESC
     Ouvrir l'inventaire                     : i
-    Afficher la t?l?commande                : t
+    Afficher la télécommande                : t
     Afficher les items d'une case           : c
     Vider la liste des messages             : delete
     Afficher le fov des ennemis             : F4
@@ -586,6 +593,56 @@ void Engine::showMenu()
 void Engine::updateTimeRound()
 {
     timeTotalRound++;
+}
+
+//
+// Selection d'une case
+//
+void Engine::selectTile(int& px, int& py, const float& prange)
+{
+    TCOD_key_t key;
+    int lastX       = px;
+    int lastY       = py;
+    bool isClosed   = false;
+
+    Level& currentLevel = map_.getCurrentLevel();
+
+    while (!isClosed)
+    {
+        this->render();
+
+        //mettre en avant les case qui SONT dans le FOV et dans le RANGE (portee donnee)
+        for (int mx = 0; mx < currentLevel.getWidth(); mx++)
+            for (int my = 0; my < currentLevel.getHeight(); my++)
+            {
+                if (currentLevel.isInFov(mx, my) && !currentLevel.isWall(mx, my) && (prange >= 0 || Tools::getDistance(px, py, mx, my) <= prange))
+                {
+                    TCODColor col = TCODConsole::root->getCharBackground(mx, my);
+                    col = col * 1.1f;
+                    TCODConsole::root->setCharBackground(mx, my, col);
+                }
+            }
+
+        TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, nullptr, true);
+
+        switch (key.vk)
+        {
+            case TCODK_LEFT   : lastX -= 1;                              break;
+            case TCODK_RIGHT  : lastX += 1;                              break;
+            case TCODK_UP     : lastY -= 1;                              break;
+            case TCODK_DOWN   : lastY += 1;                              break;
+            case TCODK_ENTER  : px = lastX; py = lastY; isClosed = true; break;
+            case TCODK_ESCAPE : isClosed = true;                         break;
+
+            default :
+                isClosed = true;
+        }
+
+        //position du curseur
+        TCODConsole::root->setCharBackground(lastX, lastY, TCODColor::white);
+
+        TCODConsole::flush();
+    }
 }
 
 //

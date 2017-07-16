@@ -12,7 +12,6 @@
 ///                                                                                                             ///
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 enum EntityState
 {
     IN_ACTION   = 0,
@@ -69,66 +68,73 @@ public:
 
     void setPosition(const int& px, const int& py);             //modifie x et y
 
-    int x;                                  //position de l'entité
-    int y;                                  //...
+    int x;                                                      //position de l'entité
+    int y;                                                      //...
 
-    std::string name;                               //nom de l'objet
-    std::string description;                            //description de l'objet
+    std::string name;                                           //nom de l'objet
+    std::string description;                                    //description de l'objet
 
-    bool block;                                 //l'objet bloque le passage
+    bool block;                                                 //l'objet bloque le passage
 
-    int chr;                                    //représentation de l'entité
-    TCODColor color;                                //couleur de fond du caractère
+    int chr;                                                    //représentation de l'entité
+    TCODColor color;                                            //couleur de fond du caractère
 
-    float timer;                                //timer pour le rendu temps réel
+    float timer;                                                //timer pour le rendu temps réel
 
-    int speed;                                  //vitesse d'exécution de l'entité
-    int energy;                                 //compteur permettant de débloquer l'action
+    int speed;                                                  //vitesse d'exécution de l'entité
+    int energy;                                                 //compteur permettant de débloquer l'action
 
-    EntityState state;                              //état de l'entité dans la gestion des actions
+    EntityState state;                                          //état de l'entité dans la gestion des actions
 
-    int levelId;                                //niveau actuel de l'entité dans la map
+    int levelId;                                                //niveau actuel de l'entité dans la map
 
-    int id;                                 //id unique qui définit l'entité
+    int id;                                                     //id unique qui définit l'entité
 };
 
 
 /////////////////////////////////////////////////////////////////////////////////
 ///                                                                           ///
-///                               ENTITYMOBILE                                ///
+///                                  ENTITYPNJ                                ///
 ///                                                                           ///
 /////////////////////////////////////////////////////////////////////////////////
 
-class EntityMobile : public Entity
+class EntityPnj : public Entity
 {
 public:
-    EntityMobile() : Entity(), life(0), maxLife(0),
+    EntityPnj() : Entity(), life(0), maxLife(0),
         defense(0), strength(0), dexterity(0), stealth(0),
-        isDead(false), moveSpeed(1), fov(10.0f) {}
+        isDead(false), moveSpeed(1), fov(10.0f), showFov(false) {}
 
-    virtual ~EntityMobile() {}
+    virtual ~EntityPnj() {}
 
     virtual void initNew(const int& px, const int& py, const int& pid,
-                         const int& plevelId, const std::string&)     = 0;    //initialisation lors d'une nouvelle partie
-    virtual void initLoad(const pugi::xml_node& pnode)          = 0;    //initialisation lors d'un chargement d'une partie
+                         const int& plevelId, const std::string&) = 0;          //initialisation lors d'une nouvelle partie
+    virtual void initLoad(const pugi::xml_node& pnode) = 0;                     //initialisation lors d'un chargement d'une partie
 
-    virtual void takeDamage(const float&) = 0;                  //calcul et application des dommages sur l'entité
+    virtual void takeDamage(const float&) = 0;                                  //calcul et application des dommages sur l'entité
+
+    //virtual bool moveOrAttack(const int& ptargetX, const int& ptargetY) = 0;    //action du pnj
+
+    virtual bool action(const int& ptargetX, const int& ptargetY)   = 0;
+    virtual bool move(const int& ptargetX, const int& ptargetY)     = 0;
+    virtual bool attack(const int& ptargetX, const int& ptargetY)   = 0;
 
     virtual void update() = 0;
 
-    std::string getDataXml();                           //retourne les données de l'entité en XML
+    std::string getDataXml();                                                   //retourne les données de l'entité en XML
 
-    int life;                                   //niveau de vie actuel
-    int maxLife;                                //vie maximale
-    int defense;                                //point de défense
-    int strength;                               //point d'attaque
-    int dexterity;                              //point de dextérité
-    int stealth;                                //furtivité du joueur
-
-    bool isDead;                                //l'entité est morte
-    int moveSpeed;                              //vitesse de déplacement
-
-    float fov;                                  //portée de la vue de l'entité
+    int life;                                                                   //niveau de vie actuel
+    int maxLife;                                                                //vie maximale
+    int defense;                                                                //point de défense
+    int strength;                                                               //point d'attaque
+    int dexterity;                                                              //point de dextérité
+    int stealth;                                                                //furtivité du joueur
+                                
+    bool isDead;                                                                //l'entité est morte
+    int moveSpeed;                                                              //vitesse de déplacement
+                                
+    float fov;                                                                  //portée de la vue de l'entité
+    bool showFov;                                                               //affiche ou non le champ de vision
 
     EntityPnjType eType;
 };
@@ -150,7 +156,7 @@ public:
                          const int&, const std::string&)        = 0;        //initialisation lors d'une nouvelle partie
     virtual void initLoad(const pugi::xml_node& pnode)          = 0;        //initialisation lors d'un chargement d'une partie
 
-    virtual void use(EntityMobile* powner)                      = 0;
+    virtual void use(EntityPnj* powner)                      = 0;
 
     std::string getDataXml();
 
@@ -160,11 +166,11 @@ public:
 };
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///                                                     ///
-///                       ENTITYFIXEDITEM                           ///
-///                                                     ///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+///                                                                           ///
+///                             ENTITYFIXEDITEM                               ///
+///                                                                           ///
+/////////////////////////////////////////////////////////////////////////////////
 
 class EntityFixedItem : public Entity
 {
@@ -173,13 +179,13 @@ public:
     virtual ~EntityFixedItem() {}
 
     virtual void initNew(const int&, const int&, const int&,
-                         const int&, Entity* pitemLink = nullptr)    = 0;    //initialisation lors d'une nouvelle partie
-    virtual void initLoad(const pugi::xml_node& pnode)          = 0;    //initialisation lors d'un chargement d'une partie
-    virtual void use(EntityMobile* powner)              = 0;
+                         const int&, Entity* pitemLink = nullptr)   = 0;    //initialisation lors d'une nouvelle partie
+    virtual void initLoad(const pugi::xml_node& pnode)              = 0;    //initialisation lors d'un chargement d'une partie
+    virtual void use(EntityPnj* powner)                          = 0;
 
     std::string getDataXml();
 
-    virtual void launch(EntityMobile* ptarget) {}
+    virtual void launch(EntityPnj* ptarget) {}
 
     EntityFixedItemType eType;
 };

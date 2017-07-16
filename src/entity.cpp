@@ -75,25 +75,25 @@ string Entity::getDataXml()
 
 ////////////////////////////////////////////////////////////////////////////////
 ///                                                                          ///
-///                              ENTITYMOBILE                                ///
+///                               ENTITYPNJ                                  ///
 ///                                                                          ///
 ////////////////////////////////////////////////////////////////////////////////
 
 //
 // Chargement des données de l'entité contenu dans pnode
 //
-void EntityMobile::initLoad(const xml_node& pnode)
+void EntityPnj::initLoad(const xml_node& pnode)
 {
     Entity::initLoad(pnode);
 
     life        = pnode.child("life").text().as_int();
     maxLife     = pnode.child("maxLife").text().as_int();
     defense     = pnode.child("defense").text().as_int();
-    strength        = pnode.child("strength").text().as_int();
-    dexterity       = pnode.child("dexterity").text().as_int();
+    strength    = pnode.child("strength").text().as_int();
+    dexterity   = pnode.child("dexterity").text().as_int();
     stealth     = pnode.child("stealth").text().as_int();
     isDead      = pnode.child("isDead").text().as_bool();
-    moveSpeed       = pnode.child("moveSpeed").text().as_int();
+    moveSpeed   = pnode.child("moveSpeed").text().as_int();
     fov         = pnode.child("fov").text().as_int();
     eType       = EntityPnjType(pnode.child("type").text().as_int());
 }
@@ -101,7 +101,7 @@ void EntityMobile::initLoad(const xml_node& pnode)
 //
 // Retourne les données de l'entité mobile sous forme de XML
 //
-string EntityMobile::getDataXml()
+string EntityPnj::getDataXml()
 {
     stringstream resXml;
 
@@ -126,11 +126,6 @@ string EntityMobile::getDataXml()
 ///                               ENTITYITEM                                 ///
 ///                                                                          ///
 ////////////////////////////////////////////////////////////////////////////////
-
-void initNew(const int&, const int&, const int&, const int&, const std::string&)
-{
-
-}
 
 //
 // Chargement des données de l'entité contenu dans pnode

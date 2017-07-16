@@ -16,8 +16,8 @@ public:
     void initNew(const int&, const int&, const int&, Entity* pitemLink = nullptr);
     void initLoad();
 
-    void use(EntityMobile* powner);
-    void launch(EntityMobile* powner);
+    void use(EntityPnj* powner);
+    void launch(EntityPnj* powner);
 };
 
 #endif
@@ -51,7 +51,7 @@ void Pitfall::initLoad()
 
 }
 
-void Pitfall::use(EntityMobile* powner)
+void Pitfall::use(EntityPnj* powner)
 {
 }
 
@@ -72,7 +72,7 @@ void Pitfall::render()
 //
 //Déclenchement automatique
 //
-void Pitfall::launch(EntityMobile* ptarget)
+void Pitfall::launch(EntityPnj* ptarget)
 {
     Engine::getInstance()->getGui().message(C_MESS_HIT, "Une trappe se déclenche sous vos pieds");
 

@@ -5,11 +5,11 @@
 #include "constants.hpp"
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///                                                     ///
-///                     STAIRUP                             ///
-///                                                     ///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///                                                                         ///
+///                                  STAIRUP                                ///
+///                                                                         ///
+///////////////////////////////////////////////////////////////////////////////
 
 StairUp::StairUp() :
     EntityFixedItem()
@@ -47,7 +47,7 @@ std::string StairUp::getDataXml()
     return resXml.str();
 }
 
-void StairUp::use(EntityMobile* powner)
+void StairUp::use(EntityPnj* powner)
 {
     Engine::getInstance()->getGui().message(TCODColor::green, "Vous montez à l'étage supérieur.");
     Engine::getInstance()->getMap().changeLevelToUp();
@@ -68,11 +68,11 @@ void StairUp::render()
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///                                                     ///
-///                     STAIRDOWN                           ///
-///                                                     ///
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///                                                                         ///
+///                                   STAIRDOWN                             ///
+///                                                                         ///
+///////////////////////////////////////////////////////////////////////////////
 
 StairDown::StairDown() :
     EntityFixedItem()
@@ -110,7 +110,7 @@ std::string StairDown::getDataXml()
     return resXml.str();
 }
 
-void StairDown::use(EntityMobile* powner)
+void StairDown::use(EntityPnj* powner)
 {
     Engine::getInstance()->getGui().message(TCODColor::green, "Vous descendez à l'étage inférieur.");
     Engine::getInstance()->getMap().changeLevelToDown();

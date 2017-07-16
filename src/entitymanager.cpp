@@ -10,6 +10,7 @@
 #include "armor.hpp"
 #include "pitfall.hpp"
 #include "stairs.hpp"
+#include "human.hpp"
 
 using namespace std;
 
@@ -271,7 +272,10 @@ int EntityManager::createPnj(const int& ppnjType, const int& px, const int& py, 
     {
     case EntityPnjType::HUMAN :
     {
-        //EntityPnj* pnj = new EntityPnj();
+        EntityPnj* human = new Human();
+        human->initNew(px, py, getNewId(), plevelId, "");
+        pnjs_.insert(pair<int, EntityPnj*>(human->id, human));
+        return human->id;
     }
 
     default :
@@ -350,20 +354,29 @@ int EntityManager::createFixedItem(const int& pentityType, const int& px, const 
 
 void EntityManager::loadPnj(const pugi::xml_node& pnode)
 {
+    switch(EntityPnjType(pnode.child("type").text().as_int()))
+    {
+        case EntityPnjType::HUMAN :
+        {
+            EntityPnj* pnj = new Human();
+            pnj->initLoad(pnode);
+            pnjs_.insert(pair<int, EntityPnj*>(pnj->id, pnj));
+        }
+    }
 }
 
 void EntityManager::loadItem(const pugi::xml_node& pnode)
 {
     switch (EntityItemType(pnode.child("type").text().as_int()))
     {
-        case EntityItemType::BANDAGE:
+        case EntityItemType::BANDAGE :
         {
             EntityItem* item = new Bandage();
             item->initLoad(pnode);
             items_.insert(pair<int, EntityItem*>(item->id, item));
             break;
         }
-        case EntityItemType::MINE:
+        case EntityItemType::MINE :
         {
             EntityItem* item = new Mine();
             item->initLoad(pnode);

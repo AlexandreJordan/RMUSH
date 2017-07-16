@@ -16,7 +16,7 @@ public:
     void initNew(const int&, const int&, const int&, const std::string&);
     void initLoad();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 
     int minDamage;
     int maxDamage;
@@ -54,7 +54,7 @@ void Weapon::initLoad()
 
 }
 
-void Weapon::use(EntityMobile* powner)
+void Weapon::use(EntityPnj* powner)
 {
 }
 

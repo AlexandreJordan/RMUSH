@@ -16,7 +16,7 @@ public:
     void initNew(const int&, const int&, const int&, const std::string&);
     void initLoad();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 
     int classArmor;
 };
@@ -44,7 +44,7 @@ void Armor::initLoad()
 
 }
 
-void Armor::use(EntityMobile* powner)
+void Armor::use(EntityPnj* powner)
 {
 }
 

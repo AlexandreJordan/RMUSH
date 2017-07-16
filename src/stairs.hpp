@@ -26,7 +26,7 @@ public:
     void initLoad(const pugi::xml_node& pnode);
     std::string getDataXml();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 };
 
 
@@ -50,7 +50,7 @@ public:
     void initLoad(const pugi::xml_node& pnode);
     std::string getDataXml();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 };
 
 #endif

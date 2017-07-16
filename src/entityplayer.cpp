@@ -13,13 +13,13 @@
 #include <algorithm>
 
 //
-// Callback utilis‚ par l'algo de pathfinding de LIBTCOD
+// Callback utilise par l'algo de pathfinding de LIBTCOD
 //
 class PathFinding : public ITCODPathCallback
 {
     //
-    // >  0 d‚placement possible
-    // == 0 d‚placement impossible
+    // >  0 dâ€šplacement possible
+    // == 0 dâ€šplacement impossible
     //
     float getWalkCost(int xFrom, int yFrom, int xTo, int yTo, void* userData ) const {
         return 1.0f;
@@ -30,7 +30,7 @@ class PathFinding : public ITCODPathCallback
 // Constructeur
 //
 EntityPlayer::EntityPlayer() :
-    EntityMobile()
+    EntityPnj()
 {
     noise = new TCODNoise(1);
 }
@@ -41,7 +41,7 @@ EntityPlayer::~EntityPlayer()
 }
 
 //
-// Initialise les donn‚es du joueur lors d'une nouvelle partie
+// Initialise les donnees du joueur lors d'une nouvelle partie
 //
 void EntityPlayer::initNew(const int& px, const int& py, const int& pid, const int& plevelId, const std::string& pdata)
 {
@@ -86,13 +86,13 @@ void EntityPlayer::initNew(const int& px, const int& py, const int& pid, const i
 }
 
 //
-// Initialise les donn‚es … partir du fichier de sauvegarde
+// Initialise les donnees â€¦ partir du fichier de sauvegarde
 //
 //          pnode == <player>
 //
 void EntityPlayer::initLoad(const pugi::xml_node& pnode)
 {
-    EntityMobile::initLoad(pnode);
+    EntityPnj::initLoad(pnode);
 
     block               = true;
     description         = "Vous...";
@@ -117,7 +117,7 @@ void EntityPlayer::initLoad(const pugi::xml_node& pnode)
     aLegsPart           = pnode.child("aLegsPart").text().as_int();
     aFootsPart          = pnode.child("aFootsPart").text().as_int();
 
-    //t‚l‚commande
+    //telecommande
     itemLink[8]         = pnode.child("rcItem_8").text().as_int();
     itemLink[9]         = pnode.child("rcItem_9").text().as_int();
     itemLink[5]         = pnode.child("rcItem_5").text().as_int();
@@ -142,7 +142,7 @@ void EntityPlayer::render()
 }
 
 //
-// Rendu temps r‚el
+// Rendu temps reel
 //
 void EntityPlayer::rtupdate()
 {
@@ -166,97 +166,56 @@ void EntityPlayer::rtupdate()
 }
 
 //
-// Mise … jour des donn‚es du joueur
+// Mise a jour des donnâ€šes du joueur
 //
 void EntityPlayer::update()
 {
     //
-    // application des propri‚t‚s du joueur
+    // application des proprietes du joueur
     //
-    if (mutationTreshold >= 1)
+    /*if (mutationTreshold >= 1)
     {
-        std::cout << "Nouvelle mutation ajout‚es" << std::endl;
+        std::cout << "Nouvelle mutation ajoutÃ©es" << std::endl;
         mutationTreshold = 0;
-    }
+    }*/
 
-    if (isFire)
+    /*if (isFire)
     {
         life -= 5;
         fireCpt--;
 
         isFire = (fireCpt <= 0);
-    }
+    }*/
 
-    int nx = 0;
-    int ny = 0;
+    Engine* engine = Engine::getInstance();
+    bool newTurn = false;
 
-    //mise … jour des informations du GUI
-    Engine* engine                  = Engine::getInstance();
-    engine->getGui().lifeInfo       = life;
-    engine->getGui().maxLifeInfo    = maxLife;
-    engine->getGui().strengthInfo   = strength;
-    engine->getGui().dexterityInfo  = dexterity;
-    engine->getGui().defenseInfo    = defense;
-    engine->getGui().lightOnInfo    = lightOn;
-
-    switch (Engine::getInstance()->getMainKey().vk)
+    //rÃ©cupÃ©ration de la touche d'action
+    // -> touche de dÃ©placement : move(nouvelle position)
+    // -> caractÃ¨re             : action
+    switch (engine->getMainKey().vk)
     {
-    case TCODK_KP8      :
-        ny = -1;
-        break;
+    case TCODK_KP8      : newTurn = move(x, y -1);        break;
+    case TCODK_KP2      : newTurn = move(x, y + 1);       break;
+    case TCODK_KP4      : newTurn = move(x - 1, y);       break;
+    case TCODK_KP6      : newTurn = move(x + 1, y);       break;
+    case TCODK_KP9      : newTurn = move(x + 1, y - 1);   break;
+    case TCODK_KP3      : newTurn = move(x + 1, y + 1);   break;
+    case TCODK_KP1      : newTurn = move(x - 1, y + 1);   break;
+    case TCODK_KP7      : newTurn = move(x - 1, y - 1);   break;
+    case TCODK_CHAR     : newTurn = processKey(engine->getMainKey().c); break;
 
-    case TCODK_KP2      :
-        ny =  1;
-        break;
-
-    case TCODK_KP4      :
-        nx = -1;
-        break;
-
-    case TCODK_KP6      :
-        nx =  1;
-        break;
-
-    case TCODK_KP9      :
-        nx = 1;
-        ny = -1;
-        break;
-
-    case TCODK_KP3      :
-        nx = 1;
-        ny = 1;
-        break;
-
-    case TCODK_KP1      :
-        nx = -1;
-        ny = 1;
-        break;
-
-    case TCODK_KP7      :
-        nx = -1;
-        ny = -1;
-        break;
-
-    case TCODK_CHAR     :
-        processKey(engine->getMainKey().c);
-        break;
-
-    default         :
-        break;
+    default             : break;
     }
 
-    //un d‚placement est lanc‚
-    //-> un nouveau tour est lanc‚ (maj pnj, items, etc)
-    //-> mise a jour de la position du joueur
-    //-> traitement du fov
-    if (nx != 0 || ny != 0)
+    //une action ou un dÃ©placement a Ã©tÃ© effectuÃ©
+    // -> lancement d'un nouveau tour
+    // -> mise Ã  jour du fov
+    if (newTurn)
     {
         engine->setMainStatus(GameStatus::NEW_TURN);
-
-        Engine::getInstance()->updateTimeRound();
-
-        if (moveOrAttack(x + nx, y + ny))
-            engine->getMap().getCurrentLevel().computeFov(this->fov);
+        engine->updateTimeRound();
+        engine->getMap().getCurrentLevel().computeFov(this->fov);
     }
 }
 
@@ -264,7 +223,7 @@ void EntityPlayer::update()
 //
 // Gestion des touches concernant le joueur
 //
-void EntityPlayer::processKey(const int& key)
+bool EntityPlayer::processKey(const int& key)
 {
     Engine* engine = Engine::getInstance();
     int currentLevelId = engine->getMap().getCurrentLevelId();
@@ -331,7 +290,7 @@ void EntityPlayer::processKey(const int& key)
         case 'i' : showInventoryPanel(); break;
 
         //
-        //afficher la t‚l‚commande universel
+        //afficher la telecommande universel
         //
         case 't' : showRemotePanel(); break;
 
@@ -340,14 +299,14 @@ void EntityPlayer::processKey(const int& key)
         //
         case 'd' :
         {
-            vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(inventory_, "D‚poser un objet");
+            vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(inventory_, "Dâ€šposer un objet");
             for (EntityItem* item: selectedItems)
                 dropToGround(item->id);
             break;
         }
 
         //
-        //r‚cup‚rer un objet
+        //recuperer un objet
         //
         case 'g' :
         {
@@ -364,10 +323,10 @@ void EntityPlayer::processKey(const int& key)
                 if (itemsList.size() == 1)
                 {
                     //
-                    //r‚cup‚ration de l'objet
+                    //recuperation de l'objet
                     //
                     if (addToInventory(itemsList.at(0)))
-                        engine->getGui().message(C_MESS_INFO, "Vous r‚cup‚rez %s", engine->getEntityManager().getItem(itemsList.at(0))->name.c_str());
+                        engine->getGui().message(C_MESS_INFO, "Vous râ€šcupâ€šrez %s", engine->getEntityManager().getItem(itemsList.at(0))->name.c_str());
 
                 }
                 else
@@ -376,7 +335,7 @@ void EntityPlayer::processKey(const int& key)
                         //
                         //afficher une boite de dialogue pour le choix multiple
                         //
-                        vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(itemsList, "S‚lection");
+                        vector<EntityItem*> selectedItems = engine->choseMultiFromItemList(itemsList, "Sâ€šlection");
 
                         for (EntityItem* item: selectedItems)
                             addToInventory(item->id);
@@ -394,7 +353,10 @@ void EntityPlayer::processKey(const int& key)
             int y(0);
             std::string line;
 
-            selectTile(x, y, fov);
+            int nx = x;
+            int ny = y;
+
+            Engine::getInstance()->selectTile(nx, ny, fov);
 
             std::vector<EntityItem*> items = engine->getEntityManager().getItems(x, y, currentLevelId);
 
@@ -415,33 +377,26 @@ void EntityPlayer::processKey(const int& key)
         }
 
         //
-        //se d‚placer directement … un endroit cilb‚
+        //attaque Ã  distance
+        //
+        case 'f' :
+        {
+            
+        }
+
+        //
+        //se deplacer directement â€¦ un endroit cilbe
         //
         case 'x' :
         {
-            int nx(0);
-            int ny(0);
+            int nx = x;
+            int ny = y;
 
-            selectTile(nx, ny, fov);
-
-            std::cout << "destination : " << nx << " / " << ny << std::endl;
-
-            //
-            // TEST PATHFINDING !!!!
-            //
+            Engine::getInstance()->selectTile(nx, ny, fov);
 
             TCODDijkstra* path = new TCODDijkstra(MAP_WIDTH, MAP_HEIGHT, new PathFinding(), nullptr);
             path->compute(x, y);
             path->setPath(nx, ny);
-
-
-            /*for (int i = 0; i < path->size(); i++)
-            {
-            path->get(i, &px, &py);
-            std::cout << "point : " << px << " / " << py << std::endl;
-            }*/
-
-            std::cout << "distance : " << path->size() << std::endl;
 
             while (!path->isEmpty())
             {
@@ -456,21 +411,17 @@ void EntityPlayer::processKey(const int& key)
                 }
                 else
                 {
-                    std::cout << "bloqu‚ !" << std::endl;
+                    std::cout << "bloquâ€š !" << std::endl;
                 }
             }
 
             delete path;
 
-            //
-            // FIN TEST PATHFINDING !!!!
-            //
-
             break;
         }
 
         //
-        //active/d‚sactive la torche du joueur
+        //active/desactive la torche du joueur
         //
         case 'l' :
         {
@@ -501,10 +452,10 @@ void EntityPlayer::processKey(const int& key)
 }
 
 //
-// Gestion du d‚placement demand‚e. Attaque si un ennemi est sur la case cible ou
-// d‚placement si la case est libre
+// Gestion du dâ€šplacement demandee. Attaque si un ennemi est sur la case cible ou
+// deplacement si la case est libre
 //
-bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
+/*bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
 {
     Level& lvl = Engine::getInstance()->getMap().getCurrentLevel();
 
@@ -518,7 +469,7 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
         Engine::getInstance()->getMap().changeLevelToDown();
 
     //
-    //il y a un PNJ dans la case cibl‚
+    //il y a un PNJ dans la case cible
     //
     /*std::vector<EntityPnj*> pnjsList = Engine::getInstance()->getEntityManager().getPnjs(ptargetX, ptargetY, levelId);
     for (EntityPnj* pnj: pnjsList)
@@ -530,9 +481,9 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
             //
             Engine::getInstance()->getGui().message(TCODColor::orange, "Vous attaquez %s", pnj->name.c_str());
 
-            //r‚cup‚ration des dommages de l'arme du monstre
+            //râ€šcupâ€šration des dommages de l'arme du monstre
             //random entre min et max de l'arme
-            //sinon utilisation d'une valeur pour combat … main nue
+            //sinon utilisation d'une valeur pour combat â€¦ main nue
             int minDamageWeapon = 0;
             int maxDamageWeapon = 0;
 
@@ -542,7 +493,7 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
             maxDamageWeapon = dynamic_cast<Weapon*>(weapon)->maxDamage;
             }
 
-            //calcul des d‚gats
+            //calcul des dâ€šgats
             pnj->takeDamage(Tools::getDamage(strength, dexterity, minDamageWeapon, maxDamageWeapon, pnj->dexterity, pnj->defense));
 
             return false;
@@ -554,10 +505,10 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
             //
             Engine::getInstance()->getGui().message(TCODColor::orange, "Le corps de %s  !!!", pnj->name.c_str());
         }
-    }*/
+    }
 
     //
-    //il y a un item dans la case cibl‚
+    //il y a un item dans la case cible
     //
     std::vector<EntityItem*> itemsList = Engine::getInstance()->getEntityManager().getItems(ptargetX, ptargetY, lvl.getId());
 
@@ -565,7 +516,7 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
         Engine::getInstance()->getGui().message(TCODColor::orange, "%s est au sol", item->name.c_str());
 
     //
-    //il y a un item fixe dans la case cibl‚
+    //il y a un item fixe dans la case cible
     //
     EntityFixedItem* fixedItem = Engine::getInstance()->getEntityManager().getFixedItem(ptargetX, ptargetY, lvl.getId());
 
@@ -575,18 +526,64 @@ bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
         Engine::getInstance()->getGui().message(TCODColor::orange, "%s", fixedItem->name.c_str());
     }
 
-    //d‚placement effectu‚, mise a jour de la position du joueur
+    //dâ€šplacement effectuee mise a jour de la position du joueur
     x = ptargetX;
     y = ptargetY;
 
     //
-    // Gestion des propri‚t‚s de la case
-    //  - MutagŠne
+    // Gestion des proprietes de la case
+    //  - MutagÅ ne
     //  - Feux
     mutationTreshold += lvl.getTile(x, y).mutationAffect;
     isFire            = lvl.getTile(x, y).isFire;
 
     return true;
+}*/
+
+bool EntityPlayer::action(const int& ptargetX, const int& ptargetY)
+{
+}
+
+bool EntityPlayer::move(const int& ptargetX, const int& ptargetY)
+{
+    Level& lvl = Engine::getInstance()->getMap().getCurrentLevel();
+
+    //impossible de marcher sur la case cible
+    if (!lvl.canWalk(ptargetX, ptargetY))
+        return false;
+
+    //il n'y a plus de sol, le joueur tombe
+    if (lvl.getTile(ptargetX, ptargetY).isFall) {
+        Engine::getInstance()->getMap().changeLevelToDown();
+        return false;
+    }
+
+    EntityPnj* pnj = Engine::getInstance()->getEntityManager().getPnj(ptargetX, ptargetY, levelId);
+    if (pnj)
+    {
+        if (!pnj->isDead)
+        {
+            //
+            //pnj vivant
+            //
+            attack(ptargetX, ptargetY);
+            return false;
+        }
+        else
+        {
+            //
+            //pnj mort
+            //
+            Engine::getInstance()->getGui().message(TCODColor::orange, "Le corps de %s  !!!", pnj->name.c_str());
+        }
+    }
+
+    setPosition(ptargetX, ptargetY);
+    return true;
+}
+
+bool EntityPlayer::attack(const int& ptargetX, const int& ptargetY)
+{
 }
 
 //
@@ -605,7 +602,7 @@ void EntityPlayer::takeDamage(const float& pdamage)
 }
 
 //
-// Ajoute l'item pass‚ en paramˆtre dans l'inventaire du joueur
+// Ajoute l'item passe en parametre dans l'inventaire du joueur
 //
 bool EntityPlayer::addToInventory(const int& pitemId)
 {
@@ -627,7 +624,7 @@ bool EntityPlayer::addToInventory(const int& pitemId)
 }
 
 //
-// D‚pose item au sol et le retire de l'inventaire
+// Depose item au sol et le retire de l'inventaire
 //
 void EntityPlayer::dropToGround(const int& pitemId)
 {
@@ -646,66 +643,16 @@ void EntityPlayer::dropToGround(const int& pitemId)
 }
 
 //
-// S‚lection d'une case par le joueur
-//
-void EntityPlayer::selectTile(int& px, int& py, const float& prange)
-{
-    TCOD_key_t key;
-    int lastX       = x;
-    int lastY       = y;
-    bool isClosed   = false;
-
-    Level& currentLevel = Engine::getInstance()->getMap().getCurrentLevel();
-
-    while (!isClosed)
-    {
-        Engine::getInstance()->render();
-
-        //mettre en avant les case qui SONT dans le FOV et dans le RANGE (port‚e donn‚e)
-        for (int mx = 0; mx < currentLevel.getWidth(); mx++)
-            for (int my = 0; my < currentLevel.getHeight(); my++)
-            {
-                if (currentLevel.isInFov(mx, my) && !currentLevel.isWall(mx, my) && (prange >= 0 || Tools::getDistance(x, y, mx, my) <= prange))
-                {
-                    TCODColor col = TCODConsole::root->getCharBackground(mx, my);
-                    col = col * 1.1f;
-                    TCODConsole::root->setCharBackground(mx, my, col);
-                }
-            }
-
-        TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, nullptr, true);
-
-        switch (key.vk)
-        {
-            case TCODK_LEFT   : lastX -= 1;                              break;
-            case TCODK_RIGHT  : lastX += 1;                              break;
-            case TCODK_UP     : lastY -= 1;                              break;
-            case TCODK_DOWN   : lastY += 1;                              break;
-            case TCODK_ENTER  : px = lastX; py = lastY; isClosed = true; break;
-            case TCODK_ESCAPE : isClosed = true;                         break;
-
-            default :
-                isClosed = true;
-        }
-
-        //position du curseur
-        TCODConsole::root->setCharBackground(lastX, lastY, TCODColor::white);
-
-        TCODConsole::flush();
-    }
-}
-
-//
 // Affiche l'inventaire
-//  - Possibilit‚ d'utiliser un item
-//  - Possibilit‚ d'‚quiper un item
-//  - Possibilit‚ de drop un item
+//  - Possibilite d'utiliser un item
+//  - Possibilite d'â€šquiper un item
+//  - Possibilite de drop un item
 //  - Affiche les informations d'un item
-//  - Afficher l'‚quipement du joueur
+//  - Afficher l'â€šquipement du joueur
 //
 void EntityPlayer::showInventoryPanel()
 {
-    //cr‚ation d'une console pour la frame
+    //creation d'une console pour la frame
     static TCODConsole console(INVENTORY_WIDTH, INVENTORY_HEIGHT);
 
     TCOD_key_t key;
@@ -808,7 +755,7 @@ void EntityPlayer::showInventoryPanel()
 }
 
 //
-// Affiche l'interface de la t‚l‚commande universel (TU)
+// Affiche l'interface de la telecommande universel (TU)
 //  - Elle permet de piloter toute sorte d'item a distance
 //  - 4 boutons pour item
 //  - 2 boutons pour item fixe
@@ -825,7 +772,7 @@ void EntityPlayer::showRemotePanel()
     while (!isClosed)
     {
         console.clear();
-        console.printFrame(0, 0, REMOTE_WIDTH, REMOTE_HEIGHT, true, TCOD_BKGND_DEFAULT, "T‚l‚commande universel");
+        console.printFrame(0, 0, REMOTE_WIDTH, REMOTE_HEIGHT, true, TCOD_BKGND_DEFAULT, "TÃ©lÃ©commande universelle");
         console.setDefaultForeground(TCODColor::white);
 
         //dessin des boutons
@@ -837,9 +784,6 @@ void EntityPlayer::showRemotePanel()
         console.rect(28, 10, 17, 5 , true, TCOD_BKGND_SET); // -- 6 --
         console.rect(28, 16, 17, 5 , true, TCOD_BKGND_SET); // -- 3 --
         console.setDefaultBackground(TCODColor::black);
-
-        //debug
-        //cout << "TU : Item 8 (index, id, name) : " << itemLink.at(8) << " / " << em.getItem(itemLink.at(8))->id << " / " << em.getItem(itemLink.at(8))->name << endl;
 
         //affichage des slots
         console.setDefaultForeground(TCODColor::darkGrey);
@@ -876,18 +820,15 @@ void EntityPlayer::showRemotePanel()
             switch (key.c)
             {
                 //
-                // activer l'élément lié
+                // activer l'element lie
                 //
                 case 'a' :
                 {
                     if (itemLink.find(selection) != itemLink.end())
                     {
-                        cout << "TU use item : " << itemLink.at(8) << " / " << em.getItem(itemLink.at(8))->name << endl;
                         if (itemLink.at(selection) != -1)
                         {
-                            EntityItem* item = em.getItem(itemLink.at(selection));
-                            cout << "TU use item after affect : " << item->id << " / " << item->name << endl;
-                            item->use(this);
+                            em.getItem(itemLink.at(selection))->use(this);
                             isClosed = true;
                         }
                     }
@@ -907,12 +848,11 @@ void EntityPlayer::showRemotePanel()
                     if (itemLink.find(selection) != itemLink.end())
                     {
                         EntityItem* item = Engine::getInstance()->choseOneFromItemList(Engine::getInstance()->getPlayer().getInventory(), "test");
-
                         if (item) itemLink.at(selection) = item->id;
                     }
                     else if (itemFixedLink.find(selection) != itemFixedLink.end())
                     {
-                        //r‚cup‚ration des items fixes dans le fov du joueur
+                        //recuperation des items fixes dans le fov du joueur
                         vector<EntityFixedItem*> allFixedItemsList = em.getFixedItems(Engine::getInstance()->getMap().getCurrentLevelId());
                         vector<int> fixedItemsFovList;
                         
@@ -923,7 +863,7 @@ void EntityPlayer::showRemotePanel()
                         }
                         
                         //choix de l'item fixe
-                        EntityFixedItem* item = Engine::getInstance()->choseOneFromItemFixedList(fixedItemsFovList, "test");
+                        EntityFixedItem* item = Engine::getInstance()->choseOneFromItemFixedList(fixedItemsFovList, "Choix");
 
                         if (item) itemFixedLink.at(selection) = item->id;
                     }
@@ -962,7 +902,7 @@ void EntityPlayer::showRemotePanel()
 }
 
 //
-// Tente d'‚quiper item au joueur
+// Tente d'equiper item au joueur
 //
 void EntityPlayer::equipItem(const int& pitemId)
 {
@@ -1011,18 +951,16 @@ void EntityPlayer::equipItem(const int& pitemId)
 }
 
 //
-// Retourne les donn‚es sous forme de XML
+// Retourne les donnees sous forme de XML
 //
 std::string EntityPlayer::getDataXml()
 {
     std::stringstream resXml;
 
     resXml << "<player>" << std::endl;
+    resXml << EntityPnj::getDataXml();
 
-    //entitymobile
-    resXml << EntityMobile::getDataXml();
-
-    //propri‚t‚s
+    //proprietes
     resXml << "<mutationTreshold>" << mutationTreshold << "</mutationTreshold>" << std::endl;
     resXml << "<isFire>" << isFire << "</isFire>" << std::endl;
     resXml << "<fireCpt>" << fireCpt << "</fireCpt>" << std::endl;
@@ -1046,7 +984,7 @@ std::string EntityPlayer::getDataXml()
       resXml << "<id>" << id << "</id>" << std::endl;
     resXml << "</inventory>" << std::endl;
 
-    //t‚l‚commande
+    //telecommande
     resXml << "<rcItem_8>" << itemLink[8] << "</rcItem_8>" << std::endl;
     resXml << "<rcItem_9>" << itemLink[9] << "</rcItem_9>" << std::endl;
     resXml << "<rcItem_5>" << itemLink[5] << "</rcItem_5>" << std::endl;

@@ -6,7 +6,6 @@
 #include <string>
 
 #include "entity.hpp"
-#include "entitypnj.hpp"
 
 class EntityManager
 {
@@ -47,7 +46,7 @@ public:
 private:
     int lastId_;                                                                                        //dernier ID donné (lastId_ est déjà utilisé)
 
-    std::map<int, EntityPnj*> pnjs_;                                                                    //les PNJS <ID / objet>
+    std::map<int, EntityPnj*> pnjs_;                                                                 //les PNJS <ID / objet>
     std::map<int, EntityItem*> items_;                                                                  //les items  <ID / objet>
     std::map<int, EntityFixedItem*> fixedItems_;                                                        //les items fixes <ID / objet>
 

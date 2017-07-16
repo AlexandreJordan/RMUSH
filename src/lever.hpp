@@ -16,7 +16,7 @@ public:
     void initNew(const int&, const int&, const int&, EntityFixedItem* pitemLink = nullptr);
     void initLoad();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 
     EntityFixedItem* ItemLink;
 };
@@ -36,14 +36,14 @@ Lever::~Lever()
 
 void Lever::initNew(const int& px, const int& py, const int& pid, EntityFixedItem* pitemLink)
 {
-    id          = pid;
-    block       = false;
-    chr         = '/';
-    color       = C_ITEM_LEVER;
-    name        = "Un levier";
+    id              = pid;
+    block           = false;
+    chr             = '/';
+    color           = C_ITEM_LEVER;
+    name            = "Un levier";
     description     = "Active moi...";
-    x           = px;
-    y           = py;
+    x               = px;
+    y               = py;
     ItemLink        = pitemLink;
 }
 
@@ -52,7 +52,7 @@ void Lever::initLoad()
 
 }
 
-void Lever::use(EntityMobile* powner)
+void Lever::use(EntityPnj* powner)
 {
     if (!ItemLink)
         Engine::getInstance()->getGui().message(TCODColor::green, "Le levier n'est relié à rien...");

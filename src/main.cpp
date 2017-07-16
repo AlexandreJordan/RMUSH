@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
     //
     // Menu principal
     //
-    int posMenuY(25);
+    int posMenuY(28);
     char selector('-');
     int cursor(posMenuY);
     TCOD_key_t key;

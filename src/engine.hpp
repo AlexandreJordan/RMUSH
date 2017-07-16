@@ -55,6 +55,8 @@ public:
     void changeAllToDownLevel(const unsigned int& plevel, const unsigned int& x, const unsigned int& y);
     void changeEntityToDownLevel(Entity* pentity);
 
+    void selectTile(int& px, int& py, const float& prange);
+
     void updateTimeRound();
 
     EntityPlayer& getPlayer() {

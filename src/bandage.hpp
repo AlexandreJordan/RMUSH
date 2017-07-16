@@ -8,7 +8,6 @@
 using namespace pugi;
 
 class EntityItem;
-class EntityMobile;
 
 class Bandage : public EntityItem
 {
@@ -25,7 +24,7 @@ public:
 
     std::string getDataXml();
 
-    void use(EntityMobile* powner);
+    void use(EntityPnj* powner);
 
     int lifeRestore;
 };
@@ -48,10 +47,10 @@ void Bandage::initNew(const int& px, const int& py, const int& pid, const int& p
     id          = pid;
     levelId     = plevelId;
     block       = false;
-    chr         = 'm';
+    chr         = CH_BANDAGE;
     color       = C_ITEM_BANDAGE;
     name        = "Bandage";
-    description = "Bandage de soins. Arrˆte les saignements.";
+    description = "Bandage de soins. Arrï¿½te les saignements.";
     x           = px;
     y           = py;
     lifeRestore = 10;
@@ -72,7 +71,7 @@ std::string Bandage::getDataXml()
     return resXml.str();
 }
 
-void Bandage::use(EntityMobile* powner)
+void Bandage::use(EntityPnj* powner)
 {
     Engine::getInstance()->getGui().message(TCODColor::orange, "Vous utiliser un bandage.");
 }

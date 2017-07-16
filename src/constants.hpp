@@ -9,7 +9,6 @@ static const int WINDOW_WIDTH               = 80;
 static const int WINDOW_HEIGHT              = 45;
 
 //font
-//static const std::string CONSOLE_FONT       = "./data/fonts/tileset.png";
 static const std::string CONSOLE_FONT       = "./data/fonts/tileset_12x12.png";
 
 //data
@@ -23,11 +22,11 @@ static const int LEVELS_COUNT               = 2;
 //population
 static const int MIN_POPULATE_ITEM          = 1;
 static const int MAX_POPULATE_ITEM          = 6;
-static const int MIN_POPULATE_PNJ           = 1;
+static const int MIN_POPULATE_PNJ           = 2;
 static const int MAX_POPULATE_PNJ           = 6;
 static const int MIN_POPULATE_ITEMFIXED     = 1;
 static const int MAX_POPULATE_ITEMFIXED     = 6;
-static const int PNJ_TYPE_COUNT             = 0;
+static const int PNJ_TYPE_COUNT             = 1;
 static const int ITEM_TYPE_COUNT            = 1;
 static const int ITEMFIXED_TYPE_COUNT       = 1;
 
@@ -110,6 +109,8 @@ static const int T_DURATION_GAZTRAP         = 5;
 //caractères des entités
 static const char CH_FLOOR                  = '.';
 static const char CH_WALL                   = '#';
+static const char CH_HUMAN                  = 'h';
+static const char CH_BANDAGE                = '~';
 
 
 #endif

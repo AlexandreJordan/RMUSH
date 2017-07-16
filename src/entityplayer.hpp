@@ -11,7 +11,7 @@
 
 
 
-class EntityPlayer : public EntityMobile
+class EntityPlayer : public EntityPnj
 {
 public:
     EntityPlayer();
@@ -53,13 +53,15 @@ public:
     std::string getDataXml();
 
 private:
-    void processKey(const int& key);                                    //gestion de la touche appuyées
-    bool moveOrAttack(const int& ptargetX, const int& ptargetY);        //déplacement ou attaque du joueur
+    bool processKey(const int& key);                                    //gestion de la touche appuyées
+
+    bool action(const int& ptargetX, const int& ptargetY);
+    bool move(const int& ptargetX, const int& ptargetY);
+    bool attack(const int& ptargetX, const int& ptargetY);
 
     bool addToInventory(const int& pItemId);                            //ajoute l'item dans l'inventaire
     void dropToGround(const int& pitemId);                              //dépose un objet au sol
     void equipItem(const int& pitemId);                                 //tente d'équiper l'item, retourne vrai si réussi
-    void selectTile(int& px, int& py, const float& prange);             //sélection manuelle d'une case et retour
                                                                         //des coordonnées par paramètre
     void showInventoryPanel();                                          //affiche l'inventaire
     void showRemotePanel();                                             //affiche la fenêtre de la télécommande universel
