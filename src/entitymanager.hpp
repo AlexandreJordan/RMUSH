@@ -33,6 +33,9 @@ public:
     std::vector<EntityFixedItem*> getFixedItems(const int& plevelId);                                   //--
     std::vector<EntityFixedItem*> getFixedItems(const std::vector<int>& plistId);                       //--
 
+    std::vector<EntityPnj*> getPnjs(const int& px, const int& py, 
+                                    const float& pradius, const int& plevelId);                          //retourn tous les pnjs contenu dans un cercle
+
     int createPnj(const int& pentityType, const int& px, const int& py, const int& plevelId);           //crée une entité, le stock et retourne son ID
     int createItem(const int& pentityType, const int& px, const int& py, const int& plevelId);          //--
     int createFixedItem(const int& pentityType, const int& px, const int& py, const int& plevelId);     //--

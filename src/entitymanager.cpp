@@ -255,6 +255,22 @@ vector<EntityFixedItem*> EntityManager::getFixedItems(const vector<int>& plistId
     return result;
 }
 
+vector<EntityPnj*> EntityManager::getPnjs(const int& px, const int& py, const float& pradius, const int& plevelId)
+{
+    vector<EntityPnj*> result;
+
+    //parcours de tous les pnjs du niveau
+    //  -> si le pnj est dans le rayon de px, py
+    //      ajout dans le vector final
+    for (EntityPnj* pnj: getPnjs(plevelId))
+    {
+        if (Tools::getDistance(px, py, pnj->x, pnj->y) <= pradius)
+            result.push_back(pnj);
+    }
+
+    return result;
+}
+
 //
 // Retourne un nouvel ID disponible
 //

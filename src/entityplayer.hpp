@@ -57,7 +57,7 @@ private:
 
     bool action(const int& ptargetX, const int& ptargetY);
     bool move(const int& ptargetX, const int& ptargetY);
-    bool attack(const int& ptargetX, const int& ptargetY);
+    bool attack(EntityPnj* ppnj);
 
     bool addToInventory(const int& pItemId);                            //ajoute l'item dans l'inventaire
     void dropToGround(const int& pitemId);                              //dépose un objet au sol

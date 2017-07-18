@@ -24,7 +24,7 @@ public:
 
     virtual bool action(const int& ptargetX, const int& ptargetY);
     virtual bool move(const int& ptargetX, const int& ptargetY);
-    virtual bool attack(const int& ptargetX, const int& ptargetY);
+    virtual bool attack(EntityPnj* ptarget);
 
     std::string getDataXml();
 };
@@ -73,7 +73,14 @@ void Human::initLoad(const xml_node& pnode)
 
 void Human::takeDamage(const float& pdamage)
 {
+    std::cout << "takedamage pnj" << std::endl;
 
+
+    life -= pdamage;
+    if (life < 0) {
+        isDead = true;
+        Engine::getInstance()->getGui().message(C_MESS_INFO, "%s meurt lamentablement.", name);
+    }
 }
 
 std::string Human::getDataXml()
@@ -200,7 +207,7 @@ bool Human::move(const int& ptargetX, const int& ptargetY)
 
 }
 
-bool Human::attack(const int& ptargetX, const int& ptargetY)
+bool Human::attack(EntityPnj* ptarget)
 {
 
 }

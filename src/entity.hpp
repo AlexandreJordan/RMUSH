@@ -113,11 +113,9 @@ public:
 
     virtual void takeDamage(const float&) = 0;                                  //calcul et application des dommages sur l'entité
 
-    //virtual bool moveOrAttack(const int& ptargetX, const int& ptargetY) = 0;    //action du pnj
-
     virtual bool action(const int& ptargetX, const int& ptargetY)   = 0;
     virtual bool move(const int& ptargetX, const int& ptargetY)     = 0;
-    virtual bool attack(const int& ptargetX, const int& ptargetY)   = 0;
+    virtual bool attack(EntityPnj* ptarget)                         = 0;
 
     virtual void update() = 0;
 

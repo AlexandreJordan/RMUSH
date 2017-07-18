@@ -618,7 +618,7 @@ void Engine::selectTile(int& px, int& py, const float& prange)
                 if (currentLevel.isInFov(mx, my) && !currentLevel.isWall(mx, my) && (prange >= 0 || Tools::getDistance(px, py, mx, my) <= prange))
                 {
                     TCODColor col = TCODConsole::root->getCharBackground(mx, my);
-                    col = col * 1.1f;
+                    col = col * 0.5f;
                     TCODConsole::root->setCharBackground(mx, my, col);
                 }
             }
@@ -645,8 +645,63 @@ void Engine::selectTile(int& px, int& py, const float& prange)
     }
 }
 
+EntityPnj* Engine::selectPnj(const int& pcenterX, const int& pcenterY, std::vector<EntityPnj*> ppnjs)
+{
+    TCOD_key_t key;
+    bool isClosed   = false;
+    int pnjIndex    = 0;
+    int x = pcenterX;
+    int y = pcenterY;
+
+    std::cout << "taille : " << ppnjs.size() << std::endl;    
+
+    while (!isClosed)
+    {
+        this->render();
+
+        //afficher le chemin pour le premier pnj de la liste
+        //dessine une ligne directe entre les deux points
+        //  -> parcours de chaque case du trajet
+        //      -> si une case est un obstacle
+        //          -> chemin en rouge, impossible de valider
+        //      -> sinon retourner le pnj concerné
+        TCODLine::init(pcenterX, pcenterY, ppnjs.at(pnjIndex)->x, ppnjs.at(pnjIndex)->y);
+        do
+        {
+            std::cout << "x, y : " << x << ", " << y << std::endl;
+
+            TCODColor col = TCODConsole::root->getCharBackground(x, y);
+            col = col * 0.5f;
+            TCODConsole::root->setCharBackground(x, y, col);
+            TCODConsole::flush();
+            
+        } while (!TCODLine::step(&x, &y));
+
+        TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, nullptr, true);
+
+        switch (key.vk)
+        {
+            case TCODK_TAB    : {
+                //pnj suivant, retour au premier de la liste si le pnj était le dernier
+                pnjIndex = (pnjIndex >= ppnjs.size() - 1 ? 0 : pnjIndex + 1);
+                break;
+            }
+            case TCODK_ENTER  : {
+                return ppnjs.at(pnjIndex);
+            }
+            case TCODK_ESCAPE :
+                return nullptr;
+
+            default :
+                return nullptr;
+        }
+
+        TCODConsole::flush();
+    }
+}
+
 //
-// Appel? lors de la mort ou du suicide du joueur
+// Appelé lors de la mort ou du suicide du joueur
 //
 void Engine::lose()
 {

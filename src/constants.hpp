@@ -22,8 +22,8 @@ static const int LEVELS_COUNT               = 2;
 //population
 static const int MIN_POPULATE_ITEM          = 1;
 static const int MAX_POPULATE_ITEM          = 6;
-static const int MIN_POPULATE_PNJ           = 2;
-static const int MAX_POPULATE_PNJ           = 6;
+static const int MIN_POPULATE_PNJ           = 6;
+static const int MAX_POPULATE_PNJ           = 12;
 static const int MIN_POPULATE_ITEMFIXED     = 1;
 static const int MAX_POPULATE_ITEMFIXED     = 6;
 static const int PNJ_TYPE_COUNT             = 1;

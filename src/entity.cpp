@@ -29,7 +29,6 @@ void Entity::setPosition(const int& px, const int& py)
     y = py;
 }
 
-
 //
 // Chargement des données de l'entité contenu dans pnode
 //      pnode == <entity>

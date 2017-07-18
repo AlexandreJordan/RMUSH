@@ -170,25 +170,25 @@ void EntityPlayer::rtupdate()
 //
 void EntityPlayer::update()
 {
+    Engine* engine = Engine::getInstance();
+    bool newTurn = false;
+
     //
     // application des proprietes du joueur
     //
-    /*if (mutationTreshold >= 1)
+    if (mutationTreshold >= 1)
     {
-        std::cout << "Nouvelle mutation ajoutées" << std::endl;
+        cout << "Nouvelle mutation ajoutées" << endl;
         mutationTreshold = 0;
-    }*/
+    }
 
-    /*if (isFire)
+    if (isFire)
     {
         life -= 5;
         fireCpt--;
 
         isFire = (fireCpt <= 0);
-    }*/
-
-    Engine* engine = Engine::getInstance();
-    bool newTurn = false;
+    }
 
     //récupération de la touche d'action
     // -> touche de déplacement : move(nouvelle position)
@@ -381,7 +381,24 @@ bool EntityPlayer::processKey(const int& key)
         //
         case 'f' :
         {
-            
+            EntityPnj* pnjTarget = nullptr;
+
+            //selection d'un pnj par le joueur
+            vector<EntityPnj*> pnjs = engine->getEntityManager().getPnjs(x, y, fov, engine->getMap().getCurrentLevelId());
+            if (pnjs.size() > 0)
+                pnjTarget = engine->selectPnj(x, y, pnjs);
+
+            if (!pnjTarget)
+                break;
+
+            std::cout << "pnjTarget : " << pnjTarget->name << std::endl;
+
+            //  -> affichage du chemin du lancé
+            //  -> Enter / "f"  : tire si le chemin est dépourvu d'obstacle
+            //  -> Echap        : annulation du tire
+            //le pnj existe bien
+            //  -> début de l'animation de lancer
+            //  -> calcul des dégats
         }
 
         //
@@ -392,7 +409,7 @@ bool EntityPlayer::processKey(const int& key)
             int nx = x;
             int ny = y;
 
-            Engine::getInstance()->selectTile(nx, ny, fov);
+            engine->selectTile(nx, ny, fov);
 
             TCODDijkstra* path = new TCODDijkstra(MAP_WIDTH, MAP_HEIGHT, new PathFinding(), nullptr);
             path->compute(x, y);
@@ -451,51 +468,33 @@ bool EntityPlayer::processKey(const int& key)
     }
 }
 
-//
-// Gestion du d‚placement demandee. Attaque si un ennemi est sur la case cible ou
-// deplacement si la case est libre
-//
-/*bool EntityPlayer::moveOrAttack(const int& ptargetX, const int& ptargetY)
+bool EntityPlayer::action(const int& ptargetX, const int& ptargetY)
+{
+}
+
+bool EntityPlayer::move(const int& ptargetX, const int& ptargetY)
 {
     Level& lvl = Engine::getInstance()->getMap().getCurrentLevel();
 
+    //impossible de marcher sur la case cible
     if (!lvl.canWalk(ptargetX, ptargetY))
         return false;
 
-    //
     //il n'y a plus de sol, le joueur tombe
-    //
-    if (lvl.getTile(ptargetX, ptargetY).isFall)
+    if (lvl.getTile(ptargetX, ptargetY).isFall) {
         Engine::getInstance()->getMap().changeLevelToDown();
+        return false;
+    }
 
-    //
-    //il y a un PNJ dans la case cible
-    //
-    /*std::vector<EntityPnj*> pnjsList = Engine::getInstance()->getEntityManager().getPnjs(ptargetX, ptargetY, levelId);
-    for (EntityPnj* pnj: pnjsList)
+    EntityPnj* pnj = Engine::getInstance()->getEntityManager().getPnj(ptargetX, ptargetY, lvl.getId());
+    if (pnj)
     {
         if (!pnj->isDead)
         {
             //
             //pnj vivant
             //
-            Engine::getInstance()->getGui().message(TCODColor::orange, "Vous attaquez %s", pnj->name.c_str());
-
-            //r‚cup‚ration des dommages de l'arme du monstre
-            //random entre min et max de l'arme
-            //sinon utilisation d'une valeur pour combat … main nue
-            int minDamageWeapon = 0;
-            int maxDamageWeapon = 0;
-
-           if (weapon)
-            {
-            minDamageWeapon = dynamic_cast<Weapon*>(weapon)->minDamage;
-            maxDamageWeapon = dynamic_cast<Weapon*>(weapon)->maxDamage;
-            }
-
-            //calcul des d‚gats
-            pnj->takeDamage(Tools::getDamage(strength, dexterity, minDamageWeapon, maxDamageWeapon, pnj->dexterity, pnj->defense));
-
+            attack(pnj);
             return false;
         }
         else
@@ -532,58 +531,39 @@ bool EntityPlayer::processKey(const int& key)
 
     //
     // Gestion des proprietes de la case
-    //  - MutagŠne
+    //  - Mutagène
     //  - Feux
     mutationTreshold += lvl.getTile(x, y).mutationAffect;
     isFire            = lvl.getTile(x, y).isFire;
-
-    return true;
-}*/
-
-bool EntityPlayer::action(const int& ptargetX, const int& ptargetY)
-{
-}
-
-bool EntityPlayer::move(const int& ptargetX, const int& ptargetY)
-{
-    Level& lvl = Engine::getInstance()->getMap().getCurrentLevel();
-
-    //impossible de marcher sur la case cible
-    if (!lvl.canWalk(ptargetX, ptargetY))
-        return false;
-
-    //il n'y a plus de sol, le joueur tombe
-    if (lvl.getTile(ptargetX, ptargetY).isFall) {
-        Engine::getInstance()->getMap().changeLevelToDown();
-        return false;
-    }
-
-    EntityPnj* pnj = Engine::getInstance()->getEntityManager().getPnj(ptargetX, ptargetY, levelId);
-    if (pnj)
-    {
-        if (!pnj->isDead)
-        {
-            //
-            //pnj vivant
-            //
-            attack(ptargetX, ptargetY);
-            return false;
-        }
-        else
-        {
-            //
-            //pnj mort
-            //
-            Engine::getInstance()->getGui().message(TCODColor::orange, "Le corps de %s  !!!", pnj->name.c_str());
-        }
-    }
 
     setPosition(ptargetX, ptargetY);
     return true;
 }
 
-bool EntityPlayer::attack(const int& ptargetX, const int& ptargetY)
+bool EntityPlayer::attack(EntityPnj* ppnj)
 {
+    //
+    //pnj vivant
+    //
+    Engine::getInstance()->getGui().message(TCODColor::orange, "Vous attaquez %s", ppnj->name.c_str());
+
+    //récupération des dommages de l'arme du monstre
+    //random entre min et max de l'arme
+    //sinon utilisation d'une valeur pour combat à main nue
+    int minDamageWeapon = 0;
+    int maxDamageWeapon = 5;
+
+    /*if (weapon)
+    {
+        minDamageWeapon = dynamic_cast<Weapon*>(weapon)->minDamage;
+        maxDamageWeapon = dynamic_cast<Weapon*>(weapon)->maxDamage;
+    }*/
+
+    std::cout << "pnj name : " << ppnj->name << std::endl;
+    
+
+    //calcul des d‚gats
+    ppnj->takeDamage(Tools::getDamage(strength, dexterity, minDamageWeapon, maxDamageWeapon, ppnj->dexterity, ppnj->defense));
 }
 
 //

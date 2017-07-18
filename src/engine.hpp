@@ -56,6 +56,9 @@ public:
     void changeEntityToDownLevel(Entity* pentity);
 
     void selectTile(int& px, int& py, const float& prange);
+    EntityPnj* selectPnj(const int& pcenterX, const int& pcenterY, 
+                         const std::vector<EntityPnj*> ppnjs);      //sélection d'un pnj dans une liste donné de façon graphique
+                                                                    //une ligne est tracé depuis pcenterXY jusqu'au pnj
 
     void updateTimeRound();
 
