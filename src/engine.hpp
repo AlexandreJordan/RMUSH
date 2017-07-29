@@ -10,6 +10,7 @@
 #include "entityplayer.hpp"
 #include "entitymanager.hpp"
 #include "datamanager.hpp"
+#include "animationmanager.hpp"
 
 enum class GameStart
 {
@@ -110,6 +111,8 @@ private:
     Gui gui_;                                   //gestion du gui
     EntityManager entitiesManager_;             //gestion des entités
     DataManager dataManager_;                   //gestion des sauvegardes
+    AnimationManager animationsManager_;        //gestion des animations
+
     TCOD_key_t mainKey_;                        //touche appuyé durant l'update
 
     GameStatus mainStatus_;                     //statut actuel du jeu

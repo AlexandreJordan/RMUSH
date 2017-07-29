@@ -52,6 +52,26 @@ class Entity;
 //---> BUGS
 //BUG DeleteItems / FixedItems : supprimer les liens avec les items liés
 
+///////////////////////////////////////////////////////////////////////////////
+// ANIMATION TEMP REEL
+//
+// Engine :
+//  -> Liste d'animations
+//  -> Update : lancement des animations en cours
+//  -> Render : 
+//
+// Player :
+// -> 
+//
+//  ThrowingAnimation
+//  -> Origine (x, y)
+//  -> Cible (x, y)
+//  -> Caractère (char)
+//
+//  Explosion
+//  -> Origine (x, y)
+//  -> 
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // COMBAT

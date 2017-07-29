@@ -146,24 +146,16 @@ void EntityPlayer::render()
 //
 void EntityPlayer::rtupdate()
 {
-    torchX += 0.2f;
-    float tdx = torchX + 20.0f;
-    lightX = noise->get(&tdx)*1.5f;
-    tdx += 30.0f;
-    lightY = noise->get(&tdx)*1.5f;
+    torchX      += 0.2f;
+    float tdx   = torchX + 20.0f;
+    lightX      = noise->get(&tdx)*1.5f;
+    tdx         += 30.0f;
+    lightY      = noise->get(&tdx)*1.5f;
     // randomize the light intensity between -0.2 and 0.2
     lightIntensity = 0.2f * noise->get(&torchX);
-
-    timer += TCODSystem::getLastFrameLength();
-
-    if (timer >= 0.3f)
-    {
-        float frnd = TCODRandom::getInstance()->getFloat(0.2f, 1.0f);
-        color = TCODColor::red * frnd;
-
-        timer = 0.0f;
-    }
 }
+
+void throwingAnimation(const int& poriginX)
 
 //
 // Mise a jour des donn‚es du joueur
@@ -381,6 +373,12 @@ bool EntityPlayer::processKey(const int& key)
         //
         case 'f' :
         {
+            //  -> affichage du chemin du lancé
+            //  -> Enter / "f"  : tire si le chemin est dépourvu d'obstacle
+            //  -> Echap        : annulation du tire
+            //le pnj existe bien
+            //  -> début de l'animation de lancer
+            //  -> calcul des dégats
             EntityPnj* pnjTarget = nullptr;
 
             //selection d'un pnj par le joueur
@@ -391,14 +389,12 @@ bool EntityPlayer::processKey(const int& key)
             if (!pnjTarget)
                 break;
 
-            std::cout << "pnjTarget : " << pnjTarget->name << std::endl;
+            
+            //SLEEP
+            //startThrowingAnimation(list<coord>, caractère)
+            //CONTINUE
 
-            //  -> affichage du chemin du lancé
-            //  -> Enter / "f"  : tire si le chemin est dépourvu d'obstacle
-            //  -> Echap        : annulation du tire
-            //le pnj existe bien
-            //  -> début de l'animation de lancer
-            //  -> calcul des dégats
+            attack(pnjTarget);
         }
 
         //
@@ -558,9 +554,6 @@ bool EntityPlayer::attack(EntityPnj* ppnj)
         minDamageWeapon = dynamic_cast<Weapon*>(weapon)->minDamage;
         maxDamageWeapon = dynamic_cast<Weapon*>(weapon)->maxDamage;
     }*/
-
-    std::cout << "pnj name : " << ppnj->name << std::endl;
-    
 
     //calcul des d‚gats
     ppnj->takeDamage(Tools::getDamage(strength, dexterity, minDamageWeapon, maxDamageWeapon, ppnj->dexterity, ppnj->defense));

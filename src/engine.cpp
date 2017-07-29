@@ -152,6 +152,9 @@ void Engine::update()
     //mise ? jour de la carte
     map_.update();
 
+    //mise à jour des animations en cours
+    animationsManager_.update();
+
     //mise à jour du GUI
     gui_.lifeInfo       = player_.life;
     gui_.maxLifeInfo    = player_.maxLife;
@@ -172,6 +175,7 @@ void Engine::render()
     map_.render();
     player_.render();
     gui_.render();
+    animationsManager_.render();
 }
 
 //

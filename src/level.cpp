@@ -188,7 +188,7 @@ void Level::populate()
         //type de pnj
         int pnjType = TCODRandom::getInstance()->getInt(0, PNJ_TYPE_COUNT - 1);
 
-        cout << "Creation pnj id / type : " << id_ << " / " << pnjType << "pos : " << posX << " / " << posY << endl;
+        //cout << "Creation pnj id / type : " << id_ << " / " << pnjType << "pos : " << posX << " / " << posY << endl;
         Engine::getInstance()->getEntityManager().createPnj(pnjType, posX, posY, id_);
     }
 
