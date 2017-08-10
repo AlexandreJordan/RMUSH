@@ -20,9 +20,9 @@ public:
     void use(EntityPnj* powner);
 
     float rangeDestruction;             //rayon de destruction
-    bool startExplosion;                //gestion de l'explosion dans le temps r‚el
+    bool startExplosion;                //gestion de l'explosion dans le temps rï¿½el
 
-    bool floorDestroy;                  //Vrai : d‚struction du sol
+    bool floorDestroy;                  //Vrai : dï¿½struction du sol
 };
 
 #endif
@@ -43,7 +43,7 @@ void Mine::initNew(const int& px, const int& py, const int& pid, const int& plev
 {
     id                  = pid;
     levelId             = plevelId;
-    block               = false;
+    block               = true;
     chr                 = 'x';
     color               = C_ITEM_MINE;
     name                = "Une mine";
@@ -88,11 +88,11 @@ void Mine::use(EntityPnj* powner)
 
     if (floorDestroy)
     {
-        //d‚truit le sol
+        //dï¿½truit le sol
         map.getCurrentLevel().digCircleFall(x, y, rangeDestruction);
-        //d‚truit les items dans le rayon
+        //dï¿½truit les items dans le rayon
         map.getCurrentLevel().deleteItemsInCircle(x, y, rangeDestruction, this);
-        //d‚truit les items fixes dans le rayon
+        //dï¿½truit les items fixes dans le rayon
         map.getCurrentLevel().deleteFixedItemsInCircle(x, y, rangeDestruction, nullptr);
     }
 

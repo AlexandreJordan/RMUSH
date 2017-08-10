@@ -155,8 +155,6 @@ void EntityPlayer::rtupdate()
     lightIntensity = 0.2f * noise->get(&torchX);
 }
 
-void throwingAnimation(const int& poriginX)
-
 //
 // Mise a jour des donn‚es du joueur
 //
@@ -382,17 +380,17 @@ bool EntityPlayer::processKey(const int& key)
             EntityPnj* pnjTarget = nullptr;
 
             //selection d'un pnj par le joueur
+            vector<Point> path;
             vector<EntityPnj*> pnjs = engine->getEntityManager().getPnjs(x, y, fov, engine->getMap().getCurrentLevelId());
             if (pnjs.size() > 0)
-                pnjTarget = engine->selectPnj(x, y, pnjs);
+                pnjTarget = engine->selectPnj(x, y, pnjs, path);
 
             if (!pnjTarget)
                 break;
-
             
-            //SLEEP
-            //startThrowingAnimation(list<coord>, caractère)
-            //CONTINUE
+            
+
+            engine->getAnimationManager().registerAnimation(new AnimationThrowing(x, y, path, 'p'));
 
             attack(pnjTarget);
         }

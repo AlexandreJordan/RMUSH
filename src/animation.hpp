@@ -1,6 +1,9 @@
 #ifndef ANIMATION_HPP
 #define ANIMATION_HPP
 
+#include <vector>
+#include "types.hpp"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///                                                                                                             ///
 ///                                            ANIMATION                                                        ///
@@ -10,12 +13,13 @@
 class Animation
 {
 public:
-    Animation(const int& poriginX, const int& poriginY) : originX(poriginX), originY(poriginY) {}
+    Animation(const int& poriginX, const int& poriginY) : originX(poriginX), originY(poriginY), IsFinished(false) {}
     virtual ~Animation() {}
 
     virtual void update() = 0;
     virtual void render() = 0;
 
+    bool IsFinished;
 private:
     int originX;
     int originY;
@@ -29,19 +33,26 @@ private:
 ///                                                                                                             ///
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//class Point;
+
 class AnimationThrowing : public Animation
 {
 public:
-    AnimationThrowing(const int& poriginX, const int& poriginY, const int& ptargetX, const int& ptargetY, const char& pchr) 
-        : Animation(poriginX, poriginY), targetX(ptargetX), targetY(ptargetY), chr(pchr)  {}
-    ~AnimationThrowing() {}
+    AnimationThrowing(const int& poriginX, const int& poriginY, const std::vector<Point>& ppoints, const char& pchr) 
+        : Animation(poriginX, poriginY), points_(ppoints), currentX(poriginY), currentY(poriginY), index_(0), chr(pchr)  {}
+    virtual ~AnimationThrowing() {}
 
-    void update();
-    void render();
+    virtual void update();
+    virtual void render();
 
 private:
-    int targetX;
-    int targetY;
+    std::vector<Point> points_;
+    
+    int currentX;
+    int currentY;
+
+    int index_;
+
     char chr;
 };
 

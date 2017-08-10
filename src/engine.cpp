@@ -74,17 +74,58 @@ void Engine::loadGame()
 }
 
 //
-// Mise ? jour du jeu
+// Mise à jour du jeu
 //  Gestion des touches pour les fen?tres syst?me
 void Engine::update()
 {
-    mainStatus_ = GameStatus::IDLE;
+    if (!animationsManager_.isEmpty()) {
+        std::cout << "pas vide" << std::endl;
+        animationsManager_.update();
+        return;
+    } else
+        std::cout << "vide..." << std::endl;
 
     //touche appuy?e
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &mainKey_, nullptr);
 
+    mainStatus_ = GameStatus::IDLE;
+
+    processKey(mainKey_);
+
+    //mise à jour du joueur
+    player_.update();
+    player_.rtupdate();
+
+    //mise à jour de la carte
+    map_.update();
+
+    //mise à jour du GUI
+    gui_.lifeInfo       = player_.life;
+    gui_.maxLifeInfo    = player_.maxLife;
+    gui_.strengthInfo   = player_.strength;
+    gui_.dexterityInfo  = player_.dexterity;
+    gui_.defenseInfo    = player_.defense;
+    gui_.lightOnInfo    = player_.lightOn;
+    gui_.totalRoundInfo = timeTotalRound;
+}
+
+//
+// Dessin du jeu
+//
+void Engine::render()
+{
+    TCODConsole::root->clear();
+
+    map_.render();
+    player_.render();
+    gui_.render();
+    animationsManager_.render();
+}
+
+void Engine::processKey(const TCOD_key_t& pkey)
+{
     //gestion des touches syst?mes
-    switch (mainKey_.vk)
+    switch (pkey.vk)
     {
     //vide la liste des messages
     case TCODK_DELETE   :
@@ -144,38 +185,6 @@ void Engine::update()
     default:
         break;
     }
-
-    //mise ? jour du joueur
-    player_.update();
-    player_.rtupdate();
-
-    //mise ? jour de la carte
-    map_.update();
-
-    //mise à jour des animations en cours
-    animationsManager_.update();
-
-    //mise à jour du GUI
-    gui_.lifeInfo       = player_.life;
-    gui_.maxLifeInfo    = player_.maxLife;
-    gui_.strengthInfo   = player_.strength;
-    gui_.dexterityInfo  = player_.dexterity;
-    gui_.defenseInfo    = player_.defense;
-    gui_.lightOnInfo    = player_.lightOn;
-    gui_.totalRoundInfo = timeTotalRound;
-}
-
-//
-// Dessin du jeu
-//
-void Engine::render()
-{
-    TCODConsole::root->clear();
-
-    map_.render();
-    player_.render();
-    gui_.render();
-    animationsManager_.render();
 }
 
 //
@@ -649,15 +658,18 @@ void Engine::selectTile(int& px, int& py, const float& prange)
     }
 }
 
-EntityPnj* Engine::selectPnj(const int& pcenterX, const int& pcenterY, std::vector<EntityPnj*> ppnjs)
+//
+// Sélection d'un PNJ
+//
+EntityPnj* Engine::selectPnj(const int& pcenterX, const int& pcenterY, vector<EntityPnj*> ppnjs, vector<Point>& path)
 {
     TCOD_key_t key;
-    bool isClosed   = false;
-    int pnjIndex    = 0;
-    int x = pcenterX;
-    int y = pcenterY;
-
-    std::cout << "taille : " << ppnjs.size() << std::endl;    
+    bool isClosed            = false;
+    bool isNotSelectionnable = false;
+    int pnjIndex             = 0;
+    int x                    = pcenterX;
+    int y                    = pcenterY;
+    TCODColor interColor     = TCODColor::white;
 
     while (!isClosed)
     {
@@ -672,10 +684,15 @@ EntityPnj* Engine::selectPnj(const int& pcenterX, const int& pcenterY, std::vect
         TCODLine::init(pcenterX, pcenterY, ppnjs.at(pnjIndex)->x, ppnjs.at(pnjIndex)->y);
         do
         {
-            std::cout << "x, y : " << x << ", " << y << std::endl;
+            if (!map_.getCurrentLevel().canWalk(x, y)) {
+                isNotSelectionnable = true;
+                interColor = TCODColor::red;
+            }
+            
+            path.push_back(Point(x, y));
 
-            TCODColor col = TCODConsole::root->getCharBackground(x, y);
-            col = col * 0.5f;
+            TCODColor col;
+            col = TCODColor::lerp(TCODConsole::root->getCharBackground(x, y), interColor, 0.5f);
             TCODConsole::root->setCharBackground(x, y, col);
             TCODConsole::flush();
             
@@ -687,11 +704,15 @@ EntityPnj* Engine::selectPnj(const int& pcenterX, const int& pcenterY, std::vect
         {
             case TCODK_TAB    : {
                 //pnj suivant, retour au premier de la liste si le pnj était le dernier
-                pnjIndex = (pnjIndex >= ppnjs.size() - 1 ? 0 : pnjIndex + 1);
+                pnjIndex   = (pnjIndex >= ppnjs.size() - 1 ? 0 : pnjIndex + 1);
+                interColor = TCODColor::white;
                 break;
             }
             case TCODK_ENTER  : {
-                return ppnjs.at(pnjIndex);
+                if (isNotSelectionnable)
+                    break;
+                else
+                    return ppnjs.at(pnjIndex);
             }
             case TCODK_ESCAPE :
                 return nullptr;

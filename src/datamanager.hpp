@@ -1,5 +1,5 @@
-#ifndef datamanager_HPP
-#define datamanager_HPP
+#ifndef DATAMANAGER_HPP
+#define DATAMANAGER_HPP
 
 #include <string>
 #include "pugixml.hpp"
@@ -23,4 +23,4 @@ private:
     pugi::xml_document xmlDocument;                 		//document XML contenant les données du fichier xml
 };
 
-#endif
+#endif //DATAMANAGER_HPP

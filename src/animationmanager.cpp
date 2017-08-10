@@ -1,14 +1,9 @@
 #include "animationmanager.hpp"
+#include <algorithm>
 
-AnimationManager()
-{
-}
+using namespace std;
 
-~AnimationManager()
-{
-}
-
-void  AnimationManager::update()
+void AnimationManager::update()
 {
     for (Animation* animation : animations_)
     {
@@ -19,18 +14,27 @@ void  AnimationManager::update()
     }
 }
 
-void  AnimationManager::render()
+void AnimationManager::render()
 {
     for (Animation* animation : animations_)
         animation->render();
+
+    std::cout << "fin manager render anim" << std::endl;
 }
 
-void AnimationManager::registerAnimation(Animation* animation)
+void AnimationManager::registerAnimation(Animation* panimation)
 {
-    animations_.push_back(animations_);
+    std::cout << "registerAnimation" << std::endl;
+    animations_.push_back(panimation);
 }
 
-void  AnimationManager::removeAnimation(Animation* animation)
+void AnimationManager::removeAnimation(Animation* panimation)
 {
-    animations_.remove(animation);
+    vector<Animation*>::iterator it;
+
+    it = find(animations_.begin(), animations_.end(), panimation);
+    if (it != animations_.end()) {
+        animations_.erase(it);
+        delete *it;
+    }
 }
