@@ -2,6 +2,7 @@
 #define ANIMATION_HPP
 
 #include <vector>
+#include <iostream>
 #include "types.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +15,7 @@ class Animation
 {
 public:
     Animation(const int& poriginX, const int& poriginY) : originX(poriginX), originY(poriginY), IsFinished(false) {}
-    virtual ~Animation() {}
+    virtual ~Animation() { std::cout << "delete animation" << std::endl;}
 
     virtual void update() = 0;
     virtual void render() = 0;

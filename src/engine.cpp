@@ -78,12 +78,13 @@ void Engine::loadGame()
 //  Gestion des touches pour les fen?tres syst?me
 void Engine::update()
 {
+    std::cout << "engine update" << std::endl;
     if (!animationsManager_.isEmpty()) {
-        std::cout << "pas vide" << std::endl;
+        //std::cout << "pas vide" << std::endl;
         animationsManager_.update();
-        return;
-    } else
-        std::cout << "vide..." << std::endl;
+        //return;
+    }// else
+        //std::cout << "vide..." << std::endl;
 
     //touche appuy?e
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &mainKey_, nullptr);
@@ -119,7 +120,9 @@ void Engine::render()
     map_.render();
     player_.render();
     gui_.render();
-    animationsManager_.render();
+
+    if (!animationsManager_.isEmpty()) 
+        animationsManager_.render();
 }
 
 void Engine::processKey(const TCOD_key_t& pkey)

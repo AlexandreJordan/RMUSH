@@ -19,7 +19,7 @@ void AnimationManager::render()
     for (Animation* animation : animations_)
         animation->render();
 
-    std::cout << "fin manager render anim" << std::endl;
+    //std::cout << "fin manager render anim" << std::endl;
 }
 
 void AnimationManager::registerAnimation(Animation* panimation)

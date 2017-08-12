@@ -387,16 +387,15 @@ bool EntityPlayer::processKey(const int& key)
 
             if (!pnjTarget)
                 break;
-            
-            
 
             engine->getAnimationManager().registerAnimation(new AnimationThrowing(x, y, path, 'p'));
 
             attack(pnjTarget);
+            break;
         }
 
         //
-        //se deplacer directement … un endroit cilbe
+        //se deplacer directement … un endroit cible
         //
         case 'x' :
         {
