@@ -63,8 +63,10 @@ private:
     void dropToGround(const int& pitemId);                              //dépose un objet au sol
     void equipItem(const int& pitemId);                                 //tente d'équiper l'item, retourne vrai si réussi
                                                                         //des coordonnées par paramètre
+                                                                        
     void showInventoryPanel();                                          //affiche l'inventaire
     void showRemotePanel();                                             //affiche la fenêtre de la télécommande universel
+    void showMutationPanel();                                           //affiche la fenêtre des mutations
 
     void fillInventoryDev();
 

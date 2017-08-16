@@ -78,8 +78,6 @@ std::string Mine::getDataXml()
 
 void Mine::use(EntityPnj* powner)
 {
-    std::cout << "Mine::use" << std::endl;
-
     Map& map = Engine::getInstance()->getMap();
 
     Engine::getInstance()->getGui().message(C_MESS_INFO, "La mine explose !!!");
@@ -88,11 +86,11 @@ void Mine::use(EntityPnj* powner)
 
     if (floorDestroy)
     {
-        //d�truit le sol
+        //détruit le sol
         map.getCurrentLevel().digCircleFall(x, y, rangeDestruction);
-        //d�truit les items dans le rayon
+        //détruit les items dans le rayon
         map.getCurrentLevel().deleteItemsInCircle(x, y, rangeDestruction, this);
-        //d�truit les items fixes dans le rayon
+        //détruit les items fixes dans le rayon
         map.getCurrentLevel().deleteFixedItemsInCircle(x, y, rangeDestruction, nullptr);
     }
 
@@ -106,6 +104,7 @@ void Mine::update()
 
 void Mine::rtupdate()
 {
+
 }
 
 void Mine::render()

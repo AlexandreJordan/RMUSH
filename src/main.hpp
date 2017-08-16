@@ -8,12 +8,16 @@ class Entity;
 
 #endif
 
+///////////////////////////////////////////////////////////////////////////////
+// TODO LIST
+//
 //---> AMELIORATION
 //TODO retour à la ligne automatique dans les messages
 //TODO paufiner la gestion du temps pour les actions.
 //TODO séparer le déplacement et l'action : augmenter la base pour la gestion du temps du joueur
 //TODO gestion des portes
 //TODO Dégat lors de la fermeture d'une porte avec le joueur ou pnj sur la case
+//TODO Gestion des accents (problème d'encodage)
 
 
 //---> ENGINE
@@ -34,8 +38,6 @@ class Entity;
 
 
 //---> COMBATS
-//TODO combat a distance
-//TODO choix de la cible
 //TODO calcul des dégats
 
 
@@ -52,25 +54,35 @@ class Entity;
 //---> BUGS
 //BUG DeleteItems / FixedItems : supprimer les liens avec les items liés
 
+
+///////////////////////////////////////////////////////////////////////////////
+// MUTATIONS
+//
+//  Mutation :
+//      Nom
+//      Liste de propriétés appliquées sur le joueur
+//      
+//  ProcessModificationPnj(EntityMobile*, )
+//
+// Mutation ++
+//  Augmente la vitesse de déplacement
+//  Augmente la vitesse d'action
+//  Augmente la force
+//  Augmente la dextérité
+//  Augmente la CA
+//
+// Mutation --
+//  Réduit la vitesse de déplacement
+//  Réduit la vitesse d'action
+//  Réduit la force
+//  Réduit la dextérité
+//  Réduit la CA
+
 ///////////////////////////////////////////////////////////////////////////////
 // ANIMATION TEMP REEL
 //
-// Engine :
-//  -> Liste d'animations
-//  -> Update : lancement des animations en cours
-//  -> Render : 
-//
-// Player :
-// -> 
-//
 //  ThrowingAnimation
-//  -> Origine (x, y)
-//  -> Cible (x, y)
-//  -> Caractère (char)
-//
-//  Explosion
-//  -> Origine (x, y)
-//  -> 
+//  ExplosionAnimation
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,11 +103,13 @@ class Entity;
 //                Les pièces d'armures fournissent des points de défenses supplémentaires
 //Furtivité     : Détermine la distance à laquelle les ennemis voit le joueur
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // BESTIAIRE
 //
 // Homme mutant
 // Chien
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // INVENTAIRE
@@ -114,6 +128,7 @@ class Entity;
 //Liste des déclencheurs d'items fixes (au nombre de 2)
 //Possibilité d'affecter un déclencheur à un item fixe proche du joueur
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // BACKGROUND
 //
@@ -123,6 +138,7 @@ class Entity;
 //Mutations     :   Elles affectent les PNJs ainsi que le joueur en modifiant ses caractéristiques
 //                  physiques ou psychiques. Elles peuvent être bénéfiques ou bien engendrer un malus.
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // GUI
 //
@@ -130,4 +146,4 @@ class Entity;
 // Bruit              |##------|
 // Mutations : x      For. : x  
 // Arme      : x      Dex. : x
-// Position  : x      Déf. : x
+// Etage  : x      Déf. : x

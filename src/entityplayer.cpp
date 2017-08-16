@@ -193,6 +193,7 @@ void EntityPlayer::update()
     case TCODK_KP3      : newTurn = move(x + 1, y + 1);   break;
     case TCODK_KP1      : newTurn = move(x - 1, y + 1);   break;
     case TCODK_KP7      : newTurn = move(x - 1, y - 1);   break;
+    case TCODK_KP5      : newTurn = true;                 break;
     case TCODK_CHAR     : newTurn = processKey(engine->getMainKey().c); break;
 
     default             : break;
@@ -869,6 +870,14 @@ void EntityPlayer::showRemotePanel()
             }
         }
     }
+}
+
+//
+// Affiche la fenêtre des mutations
+//
+void EntityPlayer::showMutationPanel()
+{
+
 }
 
 //

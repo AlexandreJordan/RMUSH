@@ -78,13 +78,8 @@ void Engine::loadGame()
 //  Gestion des touches pour les fen?tres syst?me
 void Engine::update()
 {
-    std::cout << "engine update" << std::endl;
-    if (!animationsManager_.isEmpty()) {
-        //std::cout << "pas vide" << std::endl;
+    if (!animationsManager_.isEmpty())
         animationsManager_.update();
-        //return;
-    }// else
-        //std::cout << "vide..." << std::endl;
 
     //touche appuy?e
     TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &mainKey_, nullptr);
@@ -108,6 +103,8 @@ void Engine::update()
     gui_.defenseInfo    = player_.defense;
     gui_.lightOnInfo    = player_.lightOn;
     gui_.totalRoundInfo = timeTotalRound;
+
+    std::cout << "timetotalround : " << timeTotalRound << std::endl;
 }
 
 //

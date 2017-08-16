@@ -22,7 +22,7 @@ Gui::~Gui()
 }
 
 //
-// Rendu dans la scˆne
+// Rendu dans la scï¿½ne
 //  - Dessin des infos joueur
 //  - Dessin des messages
 //
@@ -33,13 +33,14 @@ void Gui::render()
 
     console_->setDefaultForeground(TCODColor::white);
     console_->print(0,  1, "Vie : %i/%i", lifeInfo, maxLifeInfo);
-    console_->print(0,  4, "Mutations : x");
-    console_->print(0,  5, "Vitesse   : %i", speedPlayerInfo);
-    console_->print(0,  6, "Position  : x");
-    console_->print(16, 4, "For. : %i", strengthInfo);
-    console_->print(16, 5, "Dex. : %i", dexterityInfo);
-    console_->print(16, 6, "D‚f. : %i", defenseInfo);
-    console_->print(0,  8, "Arme :");
+    console_->print(0,  3, "Mutations : x");
+    console_->print(0,  4, "Vitesse   : %i", speedPlayerInfo);
+    console_->print(0,  5, "Etage  : x");
+    console_->print(16, 3, "For. : %i", strengthInfo);
+    console_->print(16, 4, "Dex. : %i", dexterityInfo);
+    console_->print(16, 5, "Def. : %i", defenseInfo);
+    console_->print(0,  7, "Arme :");
+    console_->print(0,  9, "Temps : %d", totalRoundInfo);
 
     bar(16, 1, 10, maxLifeInfo, lifeInfo);
 
@@ -90,14 +91,14 @@ void Gui::bar(const int& px, const int& py, const int& pwidth, const float& pmax
 //
 void Gui::message(const TCODColor& pcolor, const std::string ptext, ...)
 {
-    //construction du texte avec les paramˆtres
+    //construction du texte avec les paramï¿½tres
     va_list ap;
     char buff[128];
     va_start(ap, ptext);
     vsprintf(buff, ptext.c_str(), ap);
     va_end(ap);
 
-    //la liste est complˆte, suppression du premier
+    //la liste est complï¿½te, suppression du premier
     if (messages_.size() == MESSAGES_LINES)
     {
         GuiMessage* mess = messages_.get(0);

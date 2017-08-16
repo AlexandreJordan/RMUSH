@@ -111,6 +111,7 @@ static const char CH_FLOOR                  = '.';
 static const char CH_WALL                   = '#';
 static const char CH_HUMAN                  = 'h';
 static const char CH_BANDAGE                = '~';
+static const char CH_PNJ_DEAD               = '%';
 
 
 #endif

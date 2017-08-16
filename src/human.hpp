@@ -73,9 +73,6 @@ void Human::initLoad(const xml_node& pnode)
 
 void Human::takeDamage(const float& pdamage)
 {
-    std::cout << "takedamage pnj" << std::endl;
-
-
     life -= pdamage;
     if (life < 0) {
         isDead = true;
@@ -118,7 +115,8 @@ void Human::update()
         {
             while (energy >= 100)
             {
-                //déroulement de l'action
+                move(Engine::getInstance()->getPlayer().x, Engine::getInstance()->getPlayer().y);
+
                 //moveOrAttack(Engine::getInstance()->getPlayer().x, Engine::getInstance()->getPlayer().y);
 
                 //on soustrait 100
@@ -204,7 +202,44 @@ bool Human::action(const int& ptargetX, const int& ptargetY)
 
 bool Human::move(const int& ptargetX, const int& ptargetY)
 {
+    //delta entre le joueur et le monstre
+    int deltaX      = ptargetX - x;
+    int deltaY      = ptargetY - y;
 
+    //déplacement positif ou négatif ?
+    int stepX       = (deltaX > 0) ? 1 : -1;
+    int stepY       = (deltaY > 0) ? 1 : -1;
+
+    //distance entre le joueur et le monstre
+    float distance = Tools::getDistance(ptargetX, ptargetY, x, y);
+
+    if (distance >= 2)
+    {
+        //on normalise le delta pour avoir l'orientation du déplacement en 1 case
+        deltaX = (int)round( deltaX / distance );
+        deltaY = (int)round( deltaY / distance );
+
+        //
+        //déplacement du monstre en direction du joueur
+        //
+
+        //si la case la plus directe est accessible, déplacement
+        if (Engine::getInstance()->getMap().getCurrentLevel().canWalk(x + deltaX, y + deltaY))
+        {
+            x = x + deltaX;
+            y = y + deltaY;
+        }
+        //sinon on tente de contourner par les X
+        else if (Engine::getInstance()->getMap().getCurrentLevel().canWalk(x + deltaX, y))
+        {
+            x = x + stepX;
+        }
+        //sinon on tente de contourner par les Y
+        else if (Engine::getInstance()->getMap().getCurrentLevel().canWalk(x, y + deltaY))
+        {
+            y = y + stepY;
+        }
+    }
 }
 
 bool Human::attack(EntityPnj* ptarget)
@@ -214,7 +249,9 @@ bool Human::attack(EntityPnj* ptarget)
 
 void Human::render()
 {
-    TCODConsole::root->setChar(x, y, chr);
+    int pnjchr = (isDead ? CH_PNJ_DEAD : chr);
+
+    TCODConsole::root->setChar(x, y, pnjchr);
     TCODConsole::root->setCharForeground(x, y, color);
 
     if (showFov)

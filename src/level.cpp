@@ -438,17 +438,17 @@ void Level::digCircle(const int& px, const int& py, const int& radius)
 //
 void Level::digCircleFall(const unsigned int& px, const unsigned int& py, const unsigned int& radius)
 {
+    if (id_ >= LEVELS_COUNT)                            //dernier niveau
+        return;
+
     for (unsigned int x = px - radius; x <= px + radius; x++)
     {
         for (unsigned int y = py - radius; y <= py + radius; y++)
         {
             if (!isInLevel(x, y))                               //pas dans le niveau
-                return;
+                continue;;
 
             if (Tools::getDistance(x, y, px, py) > radius)      //pas dans le cercle
-                continue;
-
-            if (id_ >= LEVELS_COUNT)                            //dernier niveau
                 continue;
 
             //si la case du niveau suivant est creusé
