@@ -3,6 +3,7 @@
 
 #include "entity.hpp"
 #include "pugixml.hpp"
+#include "weapon.hpp"
 
 #include <string>
 #include <sstream>
@@ -25,6 +26,8 @@ public:
     void initLoad(const pugi::xml_node& pnode);
 
     void takeDamage(const float& pdamage);                              //calcul et application des dommages sur l'entité
+
+    std::string getWeaponNameWield();                                   //retourne le nom de l'arme portée
 
     std::vector<int>& getInventory() {
         return inventory_;
@@ -61,7 +64,7 @@ private:
 
     bool addToInventory(const int& pItemId);                            //ajoute l'item dans l'inventaire
     void dropToGround(const int& pitemId);                              //dépose un objet au sol
-    void equipItem(const int& pitemId);                                 //tente d'équiper l'item, retourne vrai si réussi
+    void equipItem(EntityItem* pitem);                                 //tente d'équiper l'item, retourne vrai si réussi
                                                                         //des coordonnées par paramètre
                                                                         
     void showInventoryPanel();                                          //affiche l'inventaire

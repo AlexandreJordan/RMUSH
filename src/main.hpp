@@ -147,3 +147,7 @@ class Entity;
 // Mutations : x      For. : x  
 // Arme      : x      Dex. : x
 // Etage  : x      Déf. : x
+
+///////////////////////////////////////////////////////////////////////////////
+// MEMO
+//  cmake . -G"Unix Makefiles"

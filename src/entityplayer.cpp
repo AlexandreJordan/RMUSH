@@ -5,6 +5,7 @@
 #include "constants.hpp"
 #include "stairs.hpp"
 #include "tools.hpp"
+#include "weapon.hpp"
 
 #include <iostream>
 #include <vector>
@@ -18,8 +19,8 @@
 class PathFinding : public ITCODPathCallback
 {
     //
-    // >  0 d‚placement possible
-    // == 0 d‚placement impossible
+    // >  0 déplacement possible
+    // == 0 déplacement impossible
     //
     float getWalkCost(int xFrom, int yFrom, int xTo, int yTo, void* userData ) const {
         return 1.0f;
@@ -110,6 +111,7 @@ void EntityPlayer::initLoad(const pugi::xml_node& pnode)
     lightOn             = pnode.child("lightOn").text().as_bool();
     torchX              = pnode.child("torchX").text().as_int();
     
+    //équipement
     weapon              = pnode.child("weapon").text().as_int();
     aHeadPart           = pnode.child("aHeadPart").text().as_int();
     aBodyPart           = pnode.child("aBodyPart").text().as_int();
@@ -236,11 +238,9 @@ bool EntityPlayer::processKey(const int& key)
         //
         case 'e' :
         {
-            //TODO - A CODER - inventaire
             /*EntityItem* item = Engine::getInstance()->choseOneFromItemList(inventory_, "Equiper", EntityItemType::WEAPON);
-
-            if (item) weapon = item;
-            break;*/
+            if (item) weapon = item;*/
+            break;
         }
 
         //
@@ -396,7 +396,7 @@ bool EntityPlayer::processKey(const int& key)
         }
 
         //
-        //se deplacer directement … un endroit cible
+        //se deplacer directement à un endroit cible
         //
         case 'x' :
         {
@@ -541,19 +541,21 @@ bool EntityPlayer::attack(EntityPnj* ppnj)
     //
     Engine::getInstance()->getGui().message(TCODColor::orange, "Vous attaquez %s", ppnj->name.c_str());
 
-    //récupération des dommages de l'arme du monstre
+    //récupération des dommages de l'arme portée
     //random entre min et max de l'arme
     //sinon utilisation d'une valeur pour combat à main nue
     int minDamageWeapon = 0;
     int maxDamageWeapon = 5;
 
-    /*if (weapon)
-    {
-        minDamageWeapon = dynamic_cast<Weapon*>(weapon)->minDamage;
-        maxDamageWeapon = dynamic_cast<Weapon*>(weapon)->maxDamage;
-    }*/
+    EntityItem* weaponItem = Engine::getInstance()->getEntityManager().getItem(weapon);
 
-    //calcul des d‚gats
+    if (weaponItem)
+    {
+        minDamageWeapon = dynamic_cast<Weapon*>(weaponItem)->minDamage;
+        maxDamageWeapon = dynamic_cast<Weapon*>(weaponItem)->maxDamage;
+    }
+
+    //calcul des dégats
     ppnj->takeDamage(Tools::getDamage(strength, dexterity, minDamageWeapon, maxDamageWeapon, ppnj->dexterity, ppnj->defense));
 }
 
@@ -616,10 +618,10 @@ void EntityPlayer::dropToGround(const int& pitemId)
 //
 // Affiche l'inventaire
 //  - Possibilite d'utiliser un item
-//  - Possibilite d'‚quiper un item
+//  - Possibilite d'équiper un item
 //  - Possibilite de drop un item
 //  - Affiche les informations d'un item
-//  - Afficher l'‚quipement du joueur
+//  - Afficher l'équipement du joueur
 //
 void EntityPlayer::showInventoryPanel()
 {
@@ -708,7 +710,7 @@ void EntityPlayer::showInventoryPanel()
                 {
                     case 'a'    : if (itemSelected) itemSelected->use(this); break;
                     case 'd'    : if (itemSelected) dropToGround(itemSelected->id); break;
-                    case 'w'    :  //if (itemSelected) equipItem(itemSelected); break;
+                    case 'w'    : if (itemSelected) equipItem(itemSelected); break;
                     default : break;
                 }
 
@@ -883,50 +885,49 @@ void EntityPlayer::showMutationPanel()
 //
 // Tente d'equiper item au joueur
 //
-void EntityPlayer::equipItem(const int& pitemId)
+void EntityPlayer::equipItem(EntityItem* pitem)
 {
-    //TODO - A CODER - equipItem
-    /*switch (item->type)
+    switch (pitem->eType)
     {
         case EntityItemType::WEAPON :
         {
-            weapon = item;
+            weapon = pitem->id;
             break;
         }
 
         case EntityItemType::ARMOR_HEAD :
         {
-            aHeadPart = item;
+            aHeadPart = pitem->id;
             break;
         }
 
         case EntityItemType::ARMOR_BODY :
         {
-            aBodyPart = item;
+            aBodyPart = pitem->id;
             break;
         }
 
         case EntityItemType::ARMOR_HANDS :
         {
-            aHandsPart = item;
+            aHandsPart = pitem->id;
             break;
         }
 
         case EntityItemType::ARMOR_LEGS :
         {
-            aLegsPart = item;
+            aLegsPart = pitem->id;
             break;
         }
 
         case EntityItemType::ARMOR_FOOTS :
         {
-            aFootsPart = item;
+            aFootsPart = pitem->id;
             break;
         }
 
         default:
             break;
-    }*/
+    }
 }
 
 //
@@ -993,4 +994,19 @@ void EntityPlayer::fillInventoryDev()
     newId = em.createItem(EntityItemType::BANDAGE, 0, 0, 0);
     inventory_.push_back(newId);
     em.getItem(newId)->isOnMap = false;
+
+    //ajout d'une arme
+    newId = em.createItem(EntityItemType::WEAPON, 0, 0, 0);
+    inventory_.push_back(newId);
+    em.getItem(newId)->isOnMap = false;
+}
+
+std::string EntityPlayer::getWeaponNameWield()
+{
+    EntityItem* item = Engine::getInstance()->getEntityManager().getItem(weapon);
+
+    if (item)
+        return item->name;
+    else
+        return "aucune";
 }

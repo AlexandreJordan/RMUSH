@@ -10,7 +10,7 @@
 using namespace std;
 
 Gui::Gui() : lifeInfo(0), maxLifeInfo(0), strengthInfo(0), dexterityInfo(0), defenseInfo(0), lightOnInfo(false),
-    totalRoundInfo(0.0f), speedPlayerInfo(0.0f)
+    totalRoundInfo(0.0f), speedPlayerInfo(0.0f), weaponNameInfo("Aucune")
 {
     console_ = new TCODConsole(INFOS_WIDTH, INFOS_HEIGHT);
 }
@@ -22,7 +22,7 @@ Gui::~Gui()
 }
 
 //
-// Rendu dans la sc�ne
+// Rendu dans la scène
 //  - Dessin des infos joueur
 //  - Dessin des messages
 //
@@ -35,12 +35,12 @@ void Gui::render()
     console_->print(0,  1, "Vie : %i/%i", lifeInfo, maxLifeInfo);
     console_->print(0,  3, "Mutations : x");
     console_->print(0,  4, "Vitesse   : %i", speedPlayerInfo);
-    console_->print(0,  5, "Etage  : x");
+    console_->print(0,  5, "Etage     : x");
     console_->print(16, 3, "For. : %i", strengthInfo);
     console_->print(16, 4, "Dex. : %i", dexterityInfo);
     console_->print(16, 5, "Def. : %i", defenseInfo);
-    console_->print(0,  7, "Arme :");
-    console_->print(0,  9, "Temps : %d", totalRoundInfo);
+    console_->print(0,  7, "Arme : %s", weaponNameInfo.c_str());
+    console_->print(0,  9, "Temps : %.1f", totalRoundInfo);
 
     bar(16, 1, 10, maxLifeInfo, lifeInfo);
 

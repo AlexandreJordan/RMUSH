@@ -14,7 +14,7 @@ public:
     void rtupdate();
 
     void initNew(const int& px, const int& py, const int& pid, const int& plevelId, const std::string& pdata = "");
-    void initLoad(const xml_node& pnode);
+    void initLoad(const pugi::xml_node& pnode);
     std::string getDataXml();
 
     void use(EntityPnj* powner);
@@ -43,7 +43,7 @@ void Mine::initNew(const int& px, const int& py, const int& pid, const int& plev
 {
     id                  = pid;
     levelId             = plevelId;
-    block               = true;
+    block               = false;
     chr                 = 'x';
     color               = C_ITEM_MINE;
     name                = "Une mine";
@@ -56,7 +56,7 @@ void Mine::initNew(const int& px, const int& py, const int& pid, const int& plev
     startExplosion      = false;
 }
 
-void Mine::initLoad(const xml_node& pnode)
+void Mine::initLoad(const pugi::xml_node& pnode)
 {
     EntityItem::initLoad(pnode);
     rangeDestruction    = pnode.child("rangeDestruction").text().as_float();

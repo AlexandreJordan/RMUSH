@@ -1,6 +1,12 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 
+#include "entity.hpp"
+
+#include "pugixml.hpp"
+#include <string>
+#include <sstream>
+
 class EntityItem;
 
 class Weapon : public EntityItem
@@ -13,8 +19,9 @@ public:
     void update();
     void rtupdate();
 
-    void initNew(const int&, const int&, const int&, const std::string&);
-    void initLoad();
+    void initNew(const int& px, const int& py, const int& pid, const int& plevelId, const std::string& pdata = "");
+    void initLoad(const pugi::xml_node& pnode);
+    std::string getDataXml();
 
     void use(EntityPnj* powner);
 
@@ -23,52 +30,3 @@ public:
 };
 
 #endif
-
-#include "entity.hpp"
-
-Weapon::Weapon() :
-    EntityItem(), minDamage(0), maxDamage(0)
-{
-}
-
-Weapon::~Weapon()
-{
-}
-
-
-void Weapon::initNew(const int& px, const int& py, const int& pid, const std::string& pdata)
-{
-    id          = pid;
-    block       = false;
-    chr         = 't';
-    color       = C_ITEM_DAGUE;
-    name        = "Une dague";
-    description     = "Ca coupe !";
-    x           = px;
-    y           = py;
-    eType       = EntityItemType::WEAPON;
-}
-
-void Weapon::initLoad()
-{
-
-}
-
-void Weapon::use(EntityPnj* powner)
-{
-}
-
-void Weapon::update()
-{
-
-}
-
-inline void Weapon::rtupdate()
-{
-}
-
-void Weapon::render()
-{
-    TCODConsole::root->setChar(x, y, chr);
-    TCODConsole::root->setCharForeground(x, y, color);
-}

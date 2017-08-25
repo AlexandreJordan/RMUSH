@@ -27,7 +27,7 @@ static const int MAX_POPULATE_PNJ           = 12;
 static const int MIN_POPULATE_ITEMFIXED     = 1;
 static const int MAX_POPULATE_ITEMFIXED     = 6;
 static const int PNJ_TYPE_COUNT             = 1;
-static const int ITEM_TYPE_COUNT            = 1;
+static const int ITEM_TYPE_COUNT            = 3;
 static const int ITEMFIXED_TYPE_COUNT       = 1;
 
 //infos

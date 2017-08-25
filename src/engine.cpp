@@ -103,8 +103,7 @@ void Engine::update()
     gui_.defenseInfo    = player_.defense;
     gui_.lightOnInfo    = player_.lightOn;
     gui_.totalRoundInfo = timeTotalRound;
-
-    std::cout << "timetotalround : " << timeTotalRound << std::endl;
+    gui_.weaponNameInfo = player_.getWeaponNameWield();
 }
 
 //

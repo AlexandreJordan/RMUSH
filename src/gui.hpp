@@ -35,6 +35,8 @@ public:
     float totalRoundInfo;
     float speedPlayerInfo;
 
+    std::string weaponNameInfo;
+
 private:
     void bar(const int& px, const int& py, const int& pwidth, const float& pmax, const float& pvalue);
 

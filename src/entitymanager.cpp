@@ -83,14 +83,11 @@ EntityPnj* EntityManager::getPnj(const int& pid)
 //
 EntityItem* EntityManager::getItem(const int& pid)
 {
-    std::cout << "GetItem - pid : " << pid << endl;
     map<int, EntityItem*>::iterator it;
     it = items_.find(pid);
 
-    if (it != items_.end()) {
-        std::cout << "it->second : " << it->second->id << " / " << it->second->name << endl;
+    if (it != items_.end())
         return it->second;
-    }
     else
         return nullptr;
 }
@@ -318,6 +315,13 @@ int EntityManager::createItem(const int& pentityType, const int& px, const int& 
         case EntityItemType::MINE:
         {
             EntityItem* item = new Mine();
+            item->initNew(px, py, getNewId(), plevelId, "");
+            items_.insert(pair<int, EntityItem*>(item->id, item));
+            return item->id;
+        }
+        case EntityItemType::WEAPON:
+        {
+            EntityItem* item = new Weapon();
             item->initNew(px, py, getNewId(), plevelId, "");
             items_.insert(pair<int, EntityItem*>(item->id, item));
             return item->id;
